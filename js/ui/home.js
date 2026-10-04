@@ -69,14 +69,11 @@ export function createHome(root, handlers) {
   const actions = h('div', { class: 'home-actions' }, startBtn, h('div', { class: 'btn-row' }, previewBtn, shuffleBtn));
 
   const notes = h('div', { class: 'home-notes' });
-  const footer = h(
-    'footer',
-    { class: 'home-footer' },
-    h('p', { class: 'safety' }, SAFETY_NOTE),
-    h('p', { class: 'scope' }, SCOPE_NOTE),
-  );
+  // Safety guidance sits right under Start so the one-tap path passes it (PRD section 7).
+  const safety = h('p', { class: 'safety safety-lead' }, SAFETY_NOTE);
+  const footer = h('footer', { class: 'home-footer' }, h('p', { class: 'scope' }, SCOPE_NOTE));
 
-  const content = h('div', { class: 'home-inner' }, header, card, actions, notes, footer);
+  const content = h('div', { class: 'home-inner' }, header, card, actions, safety, notes, footer);
   root.replaceChildren(content);
 
   let lastKey = null;

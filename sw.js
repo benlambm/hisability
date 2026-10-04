@@ -14,14 +14,15 @@
 'use strict';
 
 const CACHE_VERSION = '1.0.0';
+const BUILD = 'd24eb661a7b9b4a8';
 const CACHE_PREFIX = 'his-ability-';
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + '-' + BUILD;
 const SHELL = 'index.html';
 const MATCH = { ignoreVary: true }; // one representation per URL; ignore Vary: Accept-Encoding
 
 const ASSETS = [
   /* ASSETS:START */
-  // fingerprint 0702c6e83b3c1888 (written by tools/stamp-sw.mjs; changes when any file below changes)
+  // fingerprint d24eb661a7b9b4a8 (written by tools/stamp-sw.mjs; changes when any file below changes)
   './',
   'css/app.css',
   'css/figure.css',

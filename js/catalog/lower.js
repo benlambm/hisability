@@ -119,10 +119,10 @@ export default [
       focus: ['legs'],
       contacts: ['nearToe', 'nearAnkle'],
       keys: [
-        { pose: { torso: 6, nearArm: [222, 127], farArm: [219, 124], nearLeg: [100, 190], farLeg: [186, 275.2], nearFoot: 100, farFoot: 140 }, dur: 0.75, hold: 0.2, contacts: ['nearToe', 'nearAnkle', 'farToe'] },
+        { pose: { torso: 6, nearArm: [222, 127], farArm: [219, 124], nearLeg: [100, 190], farLeg: [184, 279.1], nearFoot: 100, farFoot: 162 }, dur: 0.75, hold: 0.2, contacts: ['nearToe', 'nearAnkle', 'farToe'] },
         { pose: { torso: 3, nearArm: [222, 127], farArm: [219, 124], nearLeg: [175.2, 183.2], farLeg: [147, 212.8], nearFoot: 100, farFoot: 100 }, dur: 0.3, hold: 0, tween: true },
         { pose: { torso: 3, nearArm: [222, 127], farArm: [219, 124], nearLeg: [147, 212.8], farLeg: [175.2, 183.2], nearFoot: 100, farFoot: 100 }, dur: 0.8, hold: 0.05, anchor: { joint: 'farAnkle', x: 116 }, contacts: ['farToe', 'farAnkle'] },
-        { pose: { torso: 6, nearArm: [222, 127], farArm: [219, 124], nearLeg: [186, 275.2], farLeg: [100, 190], nearFoot: 140, farFoot: 100 }, dur: 0.75, hold: 0.2, anchor: { joint: 'farAnkle', x: 116 }, contacts: ['farToe', 'farAnkle', 'nearToe'] },
+        { pose: { torso: 6, nearArm: [222, 127], farArm: [219, 124], nearLeg: [184, 279.1], farLeg: [100, 190], nearFoot: 162, farFoot: 100 }, dur: 0.75, hold: 0.2, anchor: { joint: 'farAnkle', x: 116 }, contacts: ['farToe', 'farAnkle', 'nearToe'] },
         { pose: { torso: 3, nearArm: [222, 127], farArm: [219, 124], nearLeg: [147, 212.8], farLeg: [175.2, 183.2], nearFoot: 100, farFoot: 100 }, dur: 0.3, hold: 0, tween: true, anchor: { joint: 'farAnkle', x: 116 }, contacts: ['farToe', 'farAnkle'] },
         { pose: { torso: 3, nearArm: [222, 127], farArm: [219, 124], nearLeg: [175.2, 183.2], farLeg: [147, 212.8], nearFoot: 100, farFoot: 100 }, dur: 0.8, hold: 0.05 },
       ],

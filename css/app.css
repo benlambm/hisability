@@ -668,8 +668,17 @@ svg.icon {
 }
 
 .home-footer .scope {
-  margin-top: 6px;
   color: var(--text-faint);
+}
+
+.safety-lead {
+  margin-top: -4px;
+  padding: 0 4px;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--text-soft);
+  text-wrap: balance;
 }
 
 .inline-error {

@@ -41,7 +41,7 @@ const state = {
   wakeHintShown: false,
   soundHintShown: false,
   endWasRunning: false,
-  workoutUsed: false,
+  workoutCompleted: false,
 };
 
 let cues = null;
@@ -272,7 +272,6 @@ function startWorkout() {
     return;
   }
   state.session = session;
-  state.workoutUsed = true;
   session.on(onSessionEvent);
 
   const fromPreview = preview.isOpen;
@@ -385,8 +384,9 @@ document.addEventListener('visibilitychange', () => {
   const hidden = document.visibilityState === 'hidden';
   if (!state.session) {
     // iOS resumes a suspended home-screen app instead of relaunching it. Once a workout has been
-    // used, leaving the app sets up a fresh one, so reopening shows no trace of the last session.
-    if (hidden && state.workoutUsed) freshAfterUse();
+    // completed, leaving the app sets up a fresh one, so reopening shows no trace of that session.
+    // An unfinished workout stays as it is (Requirement 2).
+    if (hidden && state.workoutCompleted) freshAfterUse();
     if (!hidden && state.updateReady) {
       state.updateToastShown = Boolean(document.querySelector('#toasts [data-toast="update"]'));
       maybeShowUpdate();
@@ -398,7 +398,7 @@ document.addEventListener('visibilitychange', () => {
 });
 
 function freshAfterUse() {
-  state.workoutUsed = false;
+  state.workoutCompleted = false;
   if (endDialog.isOpen) endDialog.dismiss();
   if (preview.isOpen) closePreview();
   if (about.isOpen) closeAbout();
@@ -514,11 +514,13 @@ function completeWorkout(snap) {
   const s = teardownSession();
   if (!s) return;
   const total = snap?.totalMs ?? Infinity;
+  const activeMs = Math.min(snap?.activeMs ?? 0, total);
+  state.workoutCompleted = true;
   finish.render({
-    activeMs: Math.min(snap?.activeMs ?? 0, total),
+    activeMs,
     movesReached: snap?.movesReached ?? 0,
     moveCount: state.workout?.moves.length ?? TIMING.moves,
-    text: pickMessage(),
+    text: pickMessage({ full: activeMs >= total - 1000 }),
   });
   showScreen('finish');
   if (hasLayer('player')) replaceLayer('finish', () => goHome());
@@ -531,7 +533,7 @@ function completeWorkout(snap) {
 function leaveFinish(another) {
   if (another) {
     generate(state.workout?.key ?? null);
-    state.workoutUsed = false;
+    state.workoutCompleted = false;
   }
   popLayer('finish');
   goHome();

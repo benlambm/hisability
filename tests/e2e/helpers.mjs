@@ -181,10 +181,12 @@ export async function startProxy() {
  * Options: clock (install the fake clock before navigation), paused (also pause it once the
  * home screen is ready, so time moves only when a test moves it), context (newContext options),
  * initScripts (functions or strings, added after the clock so they see its fakes), wait (false
- * to skip waiting for the home screen).
+ * to skip waiting for the home screen), onContext (called with the context before navigation,
+ * to attach request listeners).
  */
-export async function openApp(browser, url, { clock = false, paused = false, context: ctxOpts = {}, initScripts = [], wait = true } = {}) {
+export async function openApp(browser, url, { clock = false, paused = false, context: ctxOpts = {}, initScripts = [], wait = true, onContext } = {}) {
   const context = await browser.newContext({ ...PHONE, ...ctxOpts });
+  onContext?.(context);
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
@@ -237,6 +239,18 @@ export async function advanceBy(page, ms, settle = 50) {
  */
 export function reconcileNow(page) {
   return page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
+}
+
+/**
+ * Emulate the page being hidden (app switched away, phone locked) or shown again: headless pages
+ * are always visible, so override document.visibilityState/hidden and fire visibilitychange.
+ */
+export function setVisibility(page, state) {
+  return page.evaluate((s) => {
+    Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => s });
+    Object.defineProperty(document, 'hidden', { configurable: true, get: () => s === 'hidden' });
+    document.dispatchEvent(new Event('visibilitychange'));
+  }, state);
 }
 
 /** Poll an async predicate from Node (works whatever the page clock is doing). */

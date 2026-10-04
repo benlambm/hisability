@@ -80,7 +80,11 @@ export function stampSource(source, { version, files, print }) {
   const out = source.slice(0, a) + lines.join('\n' + indent) + '\n' + indent + source.slice(b);
   const v = /const CACHE_VERSION = '[^']*';/;
   if (!v.test(out)) throw new Error("sw.js must declare const CACHE_VERSION = '...';");
-  return out.replace(v, () => `const CACHE_VERSION = '${version}';`);
+  const b2 = /const BUILD = '[^']*';/;
+  if (!b2.test(out)) throw new Error("sw.js must declare const BUILD = '...';");
+  // BUILD makes every release precache into a cache of its own, even without a version bump,
+  // so an installing update never rewrites files the running page is using.
+  return out.replace(v, () => `const CACHE_VERSION = '${version}';`).replace(b2, () => `const BUILD = '${print}';`);
 }
 
 export async function stamp({ root = ROOT } = {}) {
@@ -116,8 +120,8 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     );
     if (r.prevPrint && r.prevPrint !== r.print && r.prevVersion === r.version) {
       console.log(
-        `Note: files changed but APP_VERSION is still ${r.version}. Before releasing, bump it in ` +
-          'js/config.js and run this again, so installed apps get a fresh cache.',
+        `Note: files changed and APP_VERSION is still ${r.version}. The new build still gets its own ` +
+          'cache; bump APP_VERSION in js/config.js when you want the release to show a new version.',
       );
     }
   }

@@ -49,6 +49,8 @@ export function hasLayer(name) {
 }
 
 export function initHistory() {
+  // A reload must not inherit layer entries from the previous page session.
+  if (history.state?.hbLayer) history.replaceState(null, '');
   window.addEventListener('popstate', () => {
     if (ignorePops > 0) {
       ignorePops -= 1;
