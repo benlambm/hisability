@@ -40,7 +40,7 @@ export function createAbout(dialog, handlers) {
       h(
         'p',
         { class: 'about-lede' },
-        'One balanced bodyweight workout each time you open the app: three lower-body, three upper-body, three core, and three cardio movements, mixed in a safe order. Preview it, shuffle it, or simply start.',
+        'One balanced, no-equipment workout each time you open the app: three lower-body, three upper-body, three core, and three cardio movements, mixed in a safe order. Preview it, shuffle it, or simply start.',
       ),
       section('Timing', h('p', null, TIMING_SENTENCE), h('p', { class: 'about-soft' }, 'Spoken cues and optional vibration guide every change, so you can keep your eyes off the screen.')),
       section('Privacy', h('p', { class: 'about-strong' }, 'Nothing is recorded. No accounts, no history, no tracking.'), h('p', { class: 'about-soft' }, 'Each workout lives in memory only and is gone when you close the app.')),

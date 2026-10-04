@@ -1,5 +1,5 @@
-// Completion messages. Encouraging, varied, and free of weight, calorie, body-shape, guilt,
-// competition, punishment, streak, or missed-day language (Requirement 26).
+// Completion messages: encouraging and varied. They celebrate only the session that just
+// happened, never appearance, comparison, records, or obligation (Requirement 26).
 export const FINISH_MESSAGES = Object.freeze([
   "That's seven minutes well spent. Come back whenever you have a few more.",
   'Nicely done. You turned a small window into real movement.',

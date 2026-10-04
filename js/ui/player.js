@@ -82,11 +82,13 @@ export function createPlayer(root, handlers) {
     resumeNum,
     h('p', { class: 'pl-overlay-text' }, 'Get set'),
   );
+  const hintEl = h('p', { class: 'pl-hint', role: 'status', hidden: true });
+  let hintTimer = 0;
   const stage = h(
     'div',
     { class: 'pl-stage' },
     figureBox,
-    h('div', { class: 'pl-badges' }, sidesBadge, easierBadge),
+    h('div', { class: 'pl-badges' }, sidesBadge, easierBadge, hintEl),
     pausedOverlay,
     resumingOverlay,
   );
@@ -333,7 +335,21 @@ export function createPlayer(root, handlers) {
     },
     update,
     settings,
+    /** A gentle, temporary note inside the stage (e.g. the wake-lock tip). */
+    hint(text, ms = 7000) {
+      clearTimeout(hintTimer);
+      hintEl.textContent = text;
+      hintEl.hidden = false;
+      stage.classList.add('has-hint');
+      hintTimer = setTimeout(() => {
+        hintEl.hidden = true;
+        stage.classList.remove('has-hint');
+      }, ms);
+    },
     unmount() {
+      clearTimeout(hintTimer);
+      hintEl.hidden = true;
+      stage.classList.remove('has-hint');
       demo?.destroy();
       demo = null;
       demoKey = '';

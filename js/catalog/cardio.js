@@ -2,9 +2,10 @@
 //
 // Pose notes (js/figure.js): angles are absolute screen degrees, 0 up, 90 forward (screen right),
 // 180 down, 270 back. Knee flexion = shin - thigh; elbow flexion = upper - fore.
-// Demos whose standing foot alternates (marching, curls, skaters) cannot name one joint that is
-// down in every key, so their `contacts` list only what stays planted throughout (possibly none);
-// the standing foot of each key is noted beside it instead.
+// Demos whose standing foot alternates (marching, curls, wall climbers, skaters) cannot name one
+// joint that is down in every key, so their `contacts` list only what stays planted throughout
+// (possibly none); the standing foot of each key is noted beside it instead.
+// Keys marked `tween: true` are in-between poses; the reduced-motion key strip skips them.
 
 /** Side view: swap near and far limbs (the other leg / arm leads). Poses must list both sides. */
 const swap = (p) => ({
@@ -54,7 +55,7 @@ const RUN_PASS = {
 
 const MARCH_UP = {
   torso: 0,
-  nearLeg: [102, 186], nearFoot: 128, // stands on far foot
+  nearLeg: [106, 188], nearFoot: 128, // stands on far foot
   farLeg: [180, 180], farFoot: 100,
   nearArm: [196, 118], farArm: [152, 72],
 };
@@ -88,16 +89,16 @@ const CURL_PASS = {
 
 // ---- Mountain climbers (side view, hands pinned).
 const CLIMB_IN = {
-  torso: 76, head: 82,
+  torso: 78, head: 82,
   nearArm: [178, 178], farArm: [178, 178],
-  nearLeg: [148, 282], nearFoot: 220, // near knee driven in under the chest, foot off the floor
-  farLeg: [247, 247], farFoot: 170,
+  nearLeg: [156, 285], nearFoot: 230, // near knee driven in under the chest, foot off the floor
+  farLeg: [245, 245], farFoot: 170,
 };
 const CLIMB_PASS = {
-  torso: 80, head: 84, // hips bob up slightly so the knees pass clear of the floor
+  torso: 82, head: 84, // legs scissor past each other; hips bob up slightly so the knees clear the floor
   nearArm: [184, 184], farArm: [184, 184],
-  nearLeg: [213, 272], nearFoot: 196,
-  farLeg: [213, 272], farFoot: 196,
+  nearLeg: [230, 258], nearFoot: 200, // going back
+  farLeg: [202, 281], farFoot: 205, // coming in
 };
 const PLANK = {
   torso: 72, head: 80,
@@ -109,7 +110,7 @@ const PLANK = {
 const WALL_IN = {
   torso: 45, head: 55,
   nearArm: [100, 94], farArm: [100, 94],
-  nearLeg: [112, 216], nearFoot: 150, // stands on far foot, near knee drives up
+  nearLeg: [112, 216], nearFoot: 118, // stands on far foot, near knee drives up
   farLeg: [202, 206], farFoot: 112,
 };
 const WALL_PASS = {
@@ -121,18 +122,18 @@ const WALL_PASS = {
 
 // ---- Skaters (front view). Landing on the near (screen-right) leg, far leg crossed behind.
 const SKATE_LAND = {
-  torso: 8, head: 4,
-  nearLeg: [166, 194], nearFoot: 105,
-  farLeg: [150, 160], farFoot: -120,
-  nearArm: [138, 150], farArm: [128, 102],
-  dx: 29,
+  torso: 13, head: 6, // leans over the landing leg
+  nearLeg: [163, 197], nearFoot: 105, // soft landing knee
+  farLeg: [136, 148], farFoot: -150, // trailing leg sweeps behind and out, foot off the floor
+  nearArm: [128, 142], farArm: [118, 92], // arms swing across toward the landing side
+  dx: 21,
 };
 const SKATE_AIR = {
   torso: 0, head: 0,
-  nearLeg: [156, 164], nearFoot: 110, // trailing leg after the push
-  farLeg: [-172, -178], farFoot: -105, // leading leg reaching for the landing
-  nearArm: [168, 172], farArm: [-172, -176],
-  lift: 10,
+  nearLeg: [150, 160], nearFoot: 110, // trailing leg after the push
+  farLeg: [-170, -176], farFoot: -105, // leading leg reaching for the landing
+  nearArm: [165, 170], farArm: [-165, -170],
+  lift: 12,
   dx: 0,
 };
 const SKATE_STEP = {
@@ -149,7 +150,8 @@ const SKATE_WIDE = {
   nearArm: [170, 176], farArm: [-170, -176],
 };
 
-// ---- Burpees (side view, hands pinned at x 150; standing keys use dx to keep the feet in place).
+// ---- Burpees (side view, hands pinned at x 150; the jump key uses dx to stay over the feet).
+// KICK_BACK is the mid-jump tuck: hips high, feet off the floor, so the hands stay planted.
 const CROUCH = {
   torso: 62, head: 72,
   nearArm: [173, 173], farArm: [173, 173],
@@ -161,12 +163,6 @@ const KICK_BACK = {
   nearArm: [185, 185], farArm: [185, 185],
   nearLeg: [175, 268], nearFoot: 172,
   farLeg: [175, 268], farFoot: 172,
-};
-const ONE_BACK = {
-  torso: 75, head: 82,
-  nearArm: [172, 172], farArm: [172, 172],
-  nearLeg: [248, 248], nearFoot: 170,
-  farLeg: [98, 215], farFoot: 115,
 };
 
 // Step-back burpee (side view, far toes pinned). Tuned so the hands stay planted while each foot
@@ -258,7 +254,7 @@ export default [
         keys: [
           { pose: { nearArm: [174, 178], nearLeg: [180, 180] }, dur: 0.55, hold: 0.1 },
           { pose: { nearArm: [28, 12], farArm: [-28, -12], nearLeg: [170, 170], farLeg: [187, 178], dx: 4 }, dur: 0.55, hold: 0.15 },
-          { pose: { nearArm: [174, 178], nearLeg: [180, 180] }, dur: 0.55, hold: 0.1 },
+          { pose: { nearArm: [174, 178], nearLeg: [180, 180] }, dur: 0.55, hold: 0.1, tween: true },
           { pose: { nearArm: [28, 12], farArm: [-28, -12], nearLeg: [-187, -178], farLeg: [-170, -170], dx: -4 }, dur: 0.55, hold: 0.15 },
         ],
       },
@@ -304,9 +300,9 @@ export default [
         contacts: [],
         keys: [
           { pose: MARCH_UP, dur: 0.45, hold: 0.12 }, // stands on far foot
-          { pose: MARCH_PASS, dur: 0.45, hold: 0.02 }, // both feet down
+          { pose: MARCH_PASS, dur: 0.45, hold: 0.02, tween: true }, // both feet down
           { pose: swap(MARCH_UP), dur: 0.45, hold: 0.12 }, // stands on near foot
-          { pose: swap(MARCH_PASS), dur: 0.45, hold: 0.02 }, // both feet down
+          { pose: swap(MARCH_PASS), dur: 0.45, hold: 0.02, tween: true }, // both feet down
         ],
       },
     },
@@ -337,7 +333,7 @@ export default [
         { pose: CLIMB_IN, dur: 0.18, hold: 0.04, ease: 'in' },
         { pose: CLIMB_PASS, dur: 0.18, hold: 0, ease: 'out', tween: true },
         { pose: swap(CLIMB_IN), dur: 0.18, hold: 0.04, ease: 'in' },
-        { pose: CLIMB_PASS, dur: 0.18, hold: 0, ease: 'out', tween: true },
+        { pose: swap(CLIMB_PASS), dur: 0.18, hold: 0, ease: 'out', tween: true },
       ],
     },
     alt: {
@@ -377,17 +373,17 @@ export default [
     mistake: 'Landing with stiff legs or knees falling inward.',
     caution: 'Land softly and sink straight into the next squat.',
     description:
-      'Figure lowers into a squat with the arms swinging back, jumps straight up reaching overhead, and lands softly back into a squat.',
+      'Figure lowers into a squat with the arms swinging back, jumps straight up with the arms reaching high, and lands softly back into a squat.',
     demo: {
       view: 'side',
       anchor: { joint: 'nearAnkle', x: 96 },
       focus: ['legs'],
       contacts: ['nearToe'],
       keys: [
-        { pose: { torso: 35, head: 25, nearArm: [215, 205], nearLeg: [100, 205] }, dur: 0.2, hold: 0.08, ease: 'in' },
-        { pose: { torso: 10, nearArm: [95, 80], nearLeg: [165, 190], nearFoot: 130 }, dur: 0.12, hold: 0, ease: 'out' },
-        { pose: { torso: 2, nearArm: [45, 32], nearLeg: [180, 182], nearFoot: 138, lift: 8 }, dur: 0.22, hold: 0.03, ease: 'in' },
-        { pose: { torso: 22, nearArm: [120, 100], nearLeg: [140, 205] }, dur: 0.3, hold: 0 },
+        { pose: { torso: 35, head: 25, nearArm: [215, 205], nearLeg: [100, 205] }, dur: 0.24, hold: 0.1, ease: 'in' },
+        { pose: { torso: 10, nearArm: [95, 80], nearLeg: [165, 190], nearFoot: 130 }, dur: 0.14, hold: 0, ease: 'out', tween: true },
+        { pose: { torso: 2, nearArm: [50, 38], nearLeg: [180, 182], nearFoot: 138, lift: 8 }, dur: 0.26, hold: 0.04, ease: 'in' },
+        { pose: { torso: 22, nearArm: [120, 100], nearLeg: [140, 205] }, dur: 0.38, hold: 0 },
       ],
     },
     alt: {
@@ -399,7 +395,7 @@ export default [
       demo: {
         view: 'side',
         anchor: { joint: 'nearToe', x: 104 },
-        focus: ['legs'],
+        focus: ['legs', 'calves'],
         contacts: ['nearToe'],
         keys: [
           { pose: { torso: 32, nearArm: [92, 90], nearLeg: [100, 202] }, dur: 0.9, hold: 0.2 },
@@ -427,13 +423,13 @@ export default [
       'Figure hops sideways from one foot to the other, landing softly while the trailing leg sweeps behind and the arms swing across.',
     demo: {
       view: 'front',
-      focus: ['legs', 'full'],
+      focus: ['legs'],
       contacts: [],
       keys: [
         { pose: SKATE_LAND, dur: 0.2, hold: 0.08, ease: 'linear' }, // lands on near foot
         { pose: SKATE_AIR, dur: 0.2, hold: 0, ease: 'linear' },
         { pose: mirror(SKATE_LAND), dur: 0.2, hold: 0.08, ease: 'linear' }, // lands on far foot
-        { pose: mirror(SKATE_AIR), dur: 0.2, hold: 0, ease: 'linear' },
+        { pose: mirror(SKATE_AIR), dur: 0.2, hold: 0, ease: 'linear', tween: true },
       ],
     },
     alt: {
@@ -444,13 +440,13 @@ export default [
         'Figure steps to one side and taps the trailing foot lightly behind, then steps back the other way with the arms swinging across.',
       demo: {
         view: 'front',
-        focus: ['legs', 'full'],
+        focus: ['legs'],
         contacts: ['nearToe', 'farToe'],
         keys: [
           { pose: SKATE_STEP, dur: 0.55, hold: 0.2 },
           { pose: SKATE_WIDE, dur: 0.55, hold: 0.05 },
           { pose: mirror(SKATE_STEP), dur: 0.55, hold: 0.2 },
-          { pose: SKATE_WIDE, dur: 0.55, hold: 0.05 },
+          { pose: SKATE_WIDE, dur: 0.55, hold: 0.05, tween: true },
         ],
       },
     },
@@ -471,19 +467,19 @@ export default [
     mistake: 'Letting the hips sag in the plank.',
     caution: 'Step back instead of jumping whenever you need to.',
     description:
-      'Figure squats and places the hands down, jumps the feet back to a plank, jumps them back in, then jumps up with arms overhead.',
+      'Figure squats and places the hands down, jumps the feet back to a plank, jumps them back in, then jumps up reaching high.',
     demo: {
       view: 'side',
       anchor: { joint: 'nearHand', x: 150 },
       focus: ['full'],
       contacts: ['nearHand', 'farHand'],
       keys: [
-        { pose: CROUCH, dur: 0.22, hold: 0.06, ease: 'in' },
-        { pose: KICK_BACK, dur: 0.2, hold: 0, ease: 'out' },
-        { pose: PLANK, dur: 0.22, hold: 0.15, ease: 'in' },
-        { pose: KICK_BACK, dur: 0.2, hold: 0, ease: 'out' },
-        { pose: CROUCH, dur: 0.4, hold: 0.06 },
-        { pose: { torso: 2, nearArm: [45, 32], nearLeg: [180, 182], nearFoot: 138, lift: 8, dx: -22 }, dur: 0.45, hold: 0.04 },
+        { pose: CROUCH, dur: 0.32, hold: 0.25, ease: 'in' },
+        { pose: KICK_BACK, dur: 0.25, hold: 0, ease: 'out', tween: true }, // jumping the feet back
+        { pose: PLANK, dur: 0.28, hold: 0.45, ease: 'in' },
+        { pose: KICK_BACK, dur: 0.25, hold: 0, ease: 'out', tween: true }, // jumping the feet in
+        { pose: CROUCH, dur: 0.38, hold: 0.15, ease: 'out' },
+        { pose: { torso: 2, nearArm: [50, 38], nearLeg: [180, 182], nearFoot: 138, lift: 8, dx: -22 }, dur: 0.42, hold: 0.04, ease: 'in' },
       ],
     },
     alt: {
@@ -491,7 +487,7 @@ export default [
       cue: 'Hands down, step back to plank, step in, stand tall.',
       equipment: 'none',
       description:
-        'Figure squats with the hands on the floor, steps one foot at a time back to a plank, steps back in, and stands tall reaching up.',
+        'Figure bends down to place the hands on the floor, steps one foot at a time back to a plank, steps back in, and stands tall reaching up.',
       demo: {
         view: 'side',
         anchor: { joint: 'farToe', x: 62 },
@@ -503,7 +499,7 @@ export default [
           { pose: SB_ONE_BACK, dur: 0.55, hold: 0.1 },
           { pose: SB_PLANK, dur: 0.55, hold: 0.25 },
           { pose: SB_ONE_IN, dur: 0.55, hold: 0.1 },
-          { pose: SB_DOWN, dur: 0.7, hold: 0.1 },
+          { pose: SB_DOWN, dur: 0.7, hold: 0.1, tween: true },
         ],
       },
     },
@@ -538,7 +534,7 @@ export default [
     },
     alt: {
       name: 'Hamstring Curls',
-      cue: 'Shift your weight and curl one heel up behind you.',
+      cue: 'Curl one heel up toward your seat, then switch.',
       equipment: 'none',
       description:
         'Figure stands tall and curls one heel up behind at a time while drawing the elbows back, keeping the other foot on the floor.',
@@ -548,9 +544,9 @@ export default [
         contacts: [],
         keys: [
           { pose: CURL_UP, dur: 0.5, hold: 0.12 }, // stands on far foot
-          { pose: CURL_PASS, dur: 0.5, hold: 0.05 }, // both feet down
+          { pose: CURL_PASS, dur: 0.5, hold: 0.05, tween: true }, // both feet down
           { pose: swap(CURL_UP), dur: 0.5, hold: 0.12 }, // stands on near foot
-          { pose: CURL_PASS, dur: 0.5, hold: 0.05 }, // both feet down
+          { pose: CURL_PASS, dur: 0.5, hold: 0.05, tween: true }, // both feet down
         ],
       },
     },
@@ -580,7 +576,7 @@ export default [
         { pose: { torso: 8, nearArm: [88, 90], farArm: [150, 30], nearLeg: [169, 187], farLeg: [205, 210], farFoot: 140 }, dur: 0.22, hold: 0.04 },
         { pose: { torso: 6, nearArm: [150, 30], farArm: [160, 40], nearLeg: [163, 194], farLeg: [198, 220], farFoot: 140 }, dur: 0.22, hold: 0.02 },
         { pose: { torso: 10, nearArm: [150, 30], farArm: [86, 88], nearLeg: [169, 187], farLeg: [205, 210], farFoot: 140 }, dur: 0.22, hold: 0.04 },
-        { pose: { torso: 6, nearArm: [150, 30], farArm: [160, 40], nearLeg: [163, 194], farLeg: [198, 220], farFoot: 140 }, dur: 0.22, hold: 0.02 },
+        { pose: { torso: 6, nearArm: [150, 30], farArm: [160, 40], nearLeg: [163, 194], farLeg: [198, 220], farFoot: 140 }, dur: 0.22, hold: 0.02, tween: true },
       ],
     },
     alt: {
@@ -597,7 +593,7 @@ export default [
         keys: [
           { pose: { torso: 3, nearArm: [150, 30], farArm: [160, 40], nearLeg: [172, 186], farLeg: [188, 192] }, dur: 0.6, hold: 0.15 },
           { pose: { torso: 8, nearArm: [88, 90], farArm: [160, 40], nearLeg: [169, 187], farLeg: [205, 210], farFoot: 140 }, dur: 0.6, hold: 0.2 },
-          { pose: { torso: 3, nearArm: [150, 30], farArm: [160, 40], nearLeg: [172, 186], farLeg: [188, 192] }, dur: 0.6, hold: 0.15 },
+          { pose: { torso: 3, nearArm: [150, 30], farArm: [160, 40], nearLeg: [172, 186], farLeg: [188, 192] }, dur: 0.6, hold: 0.15, tween: true },
           { pose: { torso: 8, nearArm: [150, 30], farArm: [86, 88], nearLeg: [169, 187], farLeg: [205, 210], farFoot: 140 }, dur: 0.6, hold: 0.2 },
         ],
       },
@@ -626,12 +622,12 @@ export default [
       focus: ['full'],
       contacts: ['nearToe', 'farToe'],
       keys: [
-        { pose: { torso: 0, nearArm: [180, 180], nearLeg: [180, 180] }, dur: 0.7, hold: 0.2 },
-        { pose: FOLD, dur: 0.6, hold: 0.1 },
-        { pose: WALK_OUT, dur: 0.6, hold: 0.05 },
-        { pose: WORM_PLANK, dur: 0.6, hold: 0.3 },
-        { pose: swap(WALK_OUT), dur: 0.6, hold: 0.05 },
-        { pose: FOLD, dur: 0.7, hold: 0.1 },
+        { pose: { torso: 0, nearArm: [180, 180], nearLeg: [180, 180] }, dur: 0.6, hold: 0.2 },
+        { pose: FOLD, dur: 0.5, hold: 0.1 },
+        { pose: WALK_OUT, dur: 0.5, hold: 0.05 },
+        { pose: WORM_PLANK, dur: 0.5, hold: 0.3 },
+        { pose: swap(WALK_OUT), dur: 0.5, hold: 0.05, tween: true },
+        { pose: FOLD, dur: 0.6, hold: 0.1, tween: true },
       ],
     },
     alt: {
@@ -649,7 +645,7 @@ export default [
           { pose: { torso: 0, nearArm: [180, 180], nearLeg: [180, 180] }, dur: 0.8, hold: 0.2 },
           { pose: { torso: 116, head: 130, nearArm: [182, 180], nearLeg: [158, 202] }, dur: 0.7, hold: 0.15 },
           { pose: { torso: 118, head: 126, nearArm: [165, 165], farArm: [188, 180], nearLeg: [180, 212], nearFoot: 118 }, dur: 0.7, hold: 0.3 },
-          { pose: { torso: 116, head: 130, nearArm: [182, 180], nearLeg: [158, 202] }, dur: 0.8, hold: 0.15 },
+          { pose: { torso: 116, head: 130, nearArm: [182, 180], nearLeg: [158, 202] }, dur: 0.8, hold: 0.15, tween: true },
         ],
       },
     },

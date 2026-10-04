@@ -179,6 +179,7 @@ async function main() {
     player.mount(workout, { audio: q.get('audio') !== '0', vibration: vibrationSupported, vibrationSupported });
     show('player');
     player.update(snapshotFor(workout, { ...opts, alternatives }));
+    if (q.get('hint') === '1') player.hint('Tip: keep your screen awake for this workout', 60000);
     if (screen === 'dialog') {
       const dlg = createEndDialog($('end-dialog'), { onKeep: noop, onEnd: noop });
       dlg.open();

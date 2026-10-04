@@ -41,7 +41,7 @@ export function createHome(root, handlers) {
         h('h2', { class: 'workout-title', id: 'workout-heading' },
           h('span', { class: 'visually-hidden' }, 'Seven minutes, '),
           '12 movements'),
-        h('p', { class: 'workout-sub' }, 'Bodyweight only'),
+        h('p', { class: 'workout-sub' }, 'No equipment needed'),
       ),
     ),
     cardBody,

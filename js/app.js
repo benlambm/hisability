@@ -282,7 +282,7 @@ function startWorkout() {
     .then((ok) => {
       if (ok || state.wakeHintShown || state.session !== session) return;
       state.wakeHintShown = true;
-      toaster.show({ message: 'Tip: keep your screen awake for this workout', duration: 6000, id: 'wake' });
+      player.hint('Tip: keep your screen awake for this workout');
     })
     .catch(() => {});
 }

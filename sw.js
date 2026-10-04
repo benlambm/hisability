@@ -21,8 +21,9 @@ const MATCH = { ignoreVary: true }; // one representation per URL; ignore Vary: 
 
 const ASSETS = [
   /* ASSETS:START */
-  // fingerprint 06cffd923b515d89 (written by tools/stamp-sw.mjs; changes when any file below changes)
+  // fingerprint e33ff67fbdb54f02 (written by tools/stamp-sw.mjs; changes when any file below changes)
   './',
+  'css/app.css',
   'css/figure.css',
   'icons/apple-touch-icon.png',
   'icons/favicon.svg',
