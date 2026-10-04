@@ -88,16 +88,16 @@ const CURL_PASS = {
 
 // ---- Mountain climbers (side view, hands pinned).
 const CLIMB_IN = {
-  torso: 70, head: 80,
-  nearArm: [180, 180], farArm: [180, 180],
-  nearLeg: [125, 280], nearFoot: 200, // near knee to chest, foot off the floor
-  farLeg: [250, 250], farFoot: 170,
+  torso: 76, head: 82,
+  nearArm: [178, 178], farArm: [178, 178],
+  nearLeg: [148, 282], nearFoot: 220, // near knee driven in under the chest, foot off the floor
+  farLeg: [247, 247], farFoot: 170,
 };
 const CLIMB_PASS = {
-  torso: 81, head: 84, // hips bob up slightly so the knees pass clear of the floor
-  nearArm: [180, 180], farArm: [180, 180],
-  nearLeg: [225, 260], nearFoot: 175,
-  farLeg: [225, 260], farFoot: 175,
+  torso: 80, head: 84, // hips bob up slightly so the knees pass clear of the floor
+  nearArm: [184, 184], farArm: [184, 184],
+  nearLeg: [213, 272], nearFoot: 196,
+  farLeg: [213, 272], farFoot: 196,
 };
 const PLANK = {
   torso: 72, head: 80,
@@ -105,11 +105,18 @@ const PLANK = {
   nearLeg: [250, 250], nearFoot: 170,
   farLeg: [250, 250], farFoot: 170,
 };
-const STEP_IN = {
-  torso: 77, head: 82,
-  nearArm: [166, 166], farArm: [166, 166],
-  nearLeg: [113, 242], nearFoot: 132, // near foot stepped in toward the hands
-  farLeg: [248, 248], farFoot: 170,
+// Wall climbers (side view, hands pinned on a wall face at x 170).
+const WALL_IN = {
+  torso: 45, head: 55,
+  nearArm: [100, 94], farArm: [100, 94],
+  nearLeg: [112, 206], nearFoot: 150, // stands on far foot, near knee drives up
+  farLeg: [210, 213], farFoot: 112,
+};
+const WALL_PASS = {
+  torso: 45, head: 55,
+  nearArm: [100, 94], farArm: [100, 94],
+  nearLeg: [210, 213], nearFoot: 112,
+  farLeg: [210, 213], farFoot: 112,
 };
 
 // ---- Skaters (front view). Landing on the near (screen-right) leg, far leg crossed behind.
@@ -334,21 +341,22 @@ export default [
       ],
     },
     alt: {
-      name: 'Step-in Climbers',
-      cue: 'Step one foot toward your hands, then step it back.',
-      equipment: 'none',
+      name: 'Wall Climbers',
+      cue: 'Hands on a wall, drive one knee up, then switch.',
+      equipment: 'wall',
       description:
-        'Figure holds a high plank and steps one foot in toward the hands, then back, alternating sides at a calm pace.',
+        'Figure leans into a wall with straight arms and drives one knee up toward the chest at a time while the other foot stays on the floor.',
       demo: {
         view: 'side',
-        anchor: { joint: 'nearHand', x: 150 },
+        anchor: { joint: 'nearHand', x: 165.4 },
+        props: [{ type: 'wall', x: 170 }],
         focus: ['core', 'legs'],
-        contacts: ['nearHand', 'farHand'],
+        contacts: [],
         keys: [
-          { pose: PLANK, dur: 0.6, hold: 0.1 },
-          { pose: STEP_IN, dur: 0.6, hold: 0.25 },
-          { pose: PLANK, dur: 0.6, hold: 0.1 },
-          { pose: swap(STEP_IN), dur: 0.6, hold: 0.25 },
+          { pose: WALL_IN, dur: 0.4, hold: 0.15 }, // stands on far foot
+          { pose: WALL_PASS, dur: 0.4, hold: 0.05, tween: true }, // both feet down
+          { pose: swap(WALL_IN), dur: 0.4, hold: 0.15 }, // stands on near foot
+          { pose: WALL_PASS, dur: 0.4, hold: 0.05, tween: true }, // both feet down
         ],
       },
     },
