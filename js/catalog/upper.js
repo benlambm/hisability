@@ -1,2 +1,96 @@
-// upper movements — see docs/ARCHITECTURE.md (Movement schema).
-export default [];
+// Upper-body movements. See docs/ARCHITECTURE.md (Movement schema, Demo schema).
+// Pose angles were solved numerically so planted hands, toes and knees stay fixed through each
+// rep; keys marked `tween: true` are in-between poses that keep contacts honest mid-motion.
+export default [
+  {
+    id: 'push-up',
+    name: 'Push-up',
+    say: 'Push-ups',
+    category: 'upper',
+    region: 'upper',
+    pattern: 'push',
+    impact: 'low',
+    equipment: 'none',
+    setup: 'Start in a high plank, hands under your shoulders.',
+    cue: 'Lower your chest as one unit, then press away.',
+    mistake: 'Letting the hips sag or pike up.',
+    caution: 'Spread your fingers wide to share the load on your wrists.',
+    description: 'Figure in a straight-body plank bends the elbows back to lower the chest toward the floor, then presses up.',
+    demo: {
+      view: 'side',
+      anchor: { joint: 'nearHand', x: 128 },
+      focus: ['chest', 'arms'],
+      contacts: ['nearHand', 'nearToe'],
+      keys: [
+        { pose: { torso: 71, nearArm: [190, 190], nearLeg: [251, 251], nearFoot: 170 }, dur: 0.6, hold: 0.2, ease: 'in' },
+        { pose: { torso: 79, nearLeg: [259, 259], nearFoot: 172, nearArm: [243, 156] }, dur: 0.6, hold: 0, ease: 'out', tween: true },
+        { pose: { torso: 87, nearLeg: [267, 267], nearFoot: 174, nearArm: [280, 156] }, dur: 0.5, hold: 0.2, ease: 'in' },
+        { pose: { torso: 79, nearLeg: [259, 259], nearFoot: 172, nearArm: [243, 156] }, dur: 0.5, hold: 0, ease: 'out', tween: true },
+      ],
+    },
+    alt: {
+      name: 'Knee Push-up',
+      cue: 'Knees down, body straight from knees to head.',
+      equipment: 'none',
+      description: 'Figure with knees on the floor keeps a straight line from knees to head while lowering the chest and pressing up.',
+      demo: {
+        view: 'side',
+        anchor: { joint: 'nearHand', x: 140 },
+        focus: ['chest', 'arms'],
+        contacts: ['nearHand', 'nearKnee'],
+        keys: [
+          { pose: { torso: 54, nearArm: [190, 190], nearLeg: [234, 300], nearFoot: 290 }, dur: 0.6, hold: 0.2, ease: 'in' },
+          { pose: { torso: 69, nearLeg: [249, 303], nearFoot: 293, nearArm: [252, 165] }, dur: 0.6, hold: 0, ease: 'out', tween: true },
+          { pose: { torso: 83, nearLeg: [263, 306], nearFoot: 296, nearArm: [299, 182] }, dur: 0.5, hold: 0.2, ease: 'in' },
+          { pose: { torso: 69, nearLeg: [249, 303], nearFoot: 293, nearArm: [252, 165] }, dur: 0.5, hold: 0, ease: 'out', tween: true },
+        ],
+      },
+    },
+  },
+  {
+    id: 'wall-push-up',
+    name: 'Wall Push-up',
+    say: 'Wall push-ups',
+    category: 'upper',
+    region: 'upper',
+    pattern: 'push',
+    impact: 'low',
+    equipment: 'wall',
+    setup: 'Stand an arm\'s length from a wall, hands on it at shoulder height.',
+    cue: 'Bend your elbows to bring your chest toward the wall.',
+    mistake: 'Leading with the head instead of the chest.',
+    description: 'Figure leans into a wall with a straight body, bends the elbows to bring the chest toward the wall, then presses back.',
+    demo: {
+      view: 'side',
+      anchor: { joint: 'nearHand', x: 151.4 },
+      focus: ['chest', 'arms'],
+      props: [{ type: 'wall', x: 156 }],
+      contacts: ['nearToe'],
+      keys: [
+        { pose: { torso: 22, nearLeg: [202, 202], nearFoot: 100, nearArm: [92, 92] }, dur: 0.6, hold: 0.2, ease: 'in' },
+        { pose: { torso: 30, nearLeg: [210, 210], nearFoot: 105, nearArm: [125, 38] }, dur: 0.6, hold: 0, ease: 'out', tween: true },
+        { pose: { torso: 37, nearLeg: [217, 217], nearFoot: 110, nearArm: [120, 1] }, dur: 0.5, hold: 0.2, ease: 'in' },
+        { pose: { torso: 30, nearLeg: [210, 210], nearFoot: 105, nearArm: [125, 38] }, dur: 0.5, hold: 0, ease: 'out', tween: true },
+      ],
+    },
+    alt: {
+      name: 'Close Wall Push-up',
+      cue: 'Step closer to the wall and bend only partway.',
+      equipment: 'wall',
+      description: 'Figure stands closer to the wall, nearly upright, and bends the elbows a little to lean in and press back.',
+      demo: {
+        view: 'side',
+        anchor: { joint: 'nearHand', x: 135.4 },
+        focus: ['chest', 'arms'],
+        props: [{ type: 'wall', x: 140 }],
+        contacts: ['nearToe'],
+        keys: [
+          { pose: { torso: 10, nearLeg: [190, 190], nearFoot: 100, nearArm: [96, 96] }, dur: 0.6, hold: 0.2, ease: 'in' },
+          { pose: { torso: 15, nearLeg: [195, 195], nearFoot: 100, nearArm: [130, 56] }, dur: 0.6, hold: 0, ease: 'out', tween: true },
+          { pose: { torso: 20, nearLeg: [200, 200], nearFoot: 100, nearArm: [140, 34] }, dur: 0.5, hold: 0.2, ease: 'in' },
+          { pose: { torso: 15, nearLeg: [195, 195], nearFoot: 100, nearArm: [130, 56] }, dur: 0.5, hold: 0, ease: 'out', tween: true },
+        ],
+      },
+    },
+  },
+];

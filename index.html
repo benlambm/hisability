@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>His Ability</title>
+<meta name="description" content="One balanced, randomized seven-minute bodyweight workout each time you open it, with guided timing, demonstrations, and spoken cues. Nothing is recorded.">
+<meta name="theme-color" content="#FAF9F5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#211A1E" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="His Ability">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="css/figure.css">
+<link rel="stylesheet" href="css/app.css">
+<script type="module" src="js/app.js"></script>
+</head>
+<body data-screen="home">
+<noscript><p class="noscript">His Ability needs JavaScript to run the workout timer. Please turn it on and reload.</p></noscript>
+<main id="main" class="app">
+  <section id="screen-home" class="screen screen-home" aria-labelledby="home-title">
+    <div class="home-inner">
+      <header class="home-header">
+        <div class="home-brand">
+          <h1 class="wordmark" id="home-title">His Ability</h1>
+          <p class="motto">From each according to his ability</p>
+        </div>
+      </header>
+    </div>
+  </section>
+  <section id="screen-player" class="screen screen-player" hidden></section>
+  <section id="screen-finish" class="screen screen-finish" aria-labelledby="finish-title" hidden></section>
+</main>
+<dialog id="preview-sheet" class="sheet sheet-full" aria-labelledby="preview-title"></dialog>
+<dialog id="about-sheet" class="sheet sheet-modal" aria-labelledby="about-title"></dialog>
+<dialog id="end-dialog" class="confirm" aria-labelledby="end-title" aria-describedby="end-desc"></dialog>
+<div id="toasts" class="toasts"></div>
+<div id="announcer" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>

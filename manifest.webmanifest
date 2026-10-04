@@ -1,0 +1,22 @@
+{
+  "id": "./",
+  "name": "His Ability",
+  "short_name": "His Ability",
+  "description": "From each according to his ability. A randomized, guided seven-minute bodyweight workout: twelve moves, no equipment, no accounts, no tracking, works offline.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FAF9F5",
+  "theme_color": "#FAF9F5",
+  "categories": ["health", "fitness"],
+  "prefer_related_applications": false,
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
