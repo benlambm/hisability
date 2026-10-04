@@ -237,7 +237,7 @@ export function createCues(options = {}) {
       const u = new U(text);
       if (voice) {
         u.voice = voice;
-        u.lang = voice.lang;
+        u.lang = String(voice.lang || 'en-US').replace(/_/g, '-'); // Android may report en_US
       } else {
         const nl = navigatorLang();
         u.lang = /^en\b/i.test(nl) ? nl : 'en-US';
@@ -311,9 +311,12 @@ export function createCues(options = {}) {
       if (e.end > freeAt) freeAt = e.end;
       if (e.kind === 'guide' && e.end > t + QUEUE_SLACK_MS) guiding = true;
     }
+    const s = synth();
     if (freeAt - t > QUEUE_SLACK_MS) {
       if (guiding) return; // the tick and haptic still mark the second
       cancelSpeech();
+    } else if (!live.length && s && (s.speaking || s.pending)) {
+      cancelSpeech(); // busy with nothing we expect to still be talking: stale or stuck (iOS)
     }
     say(word, 'count');
   }
@@ -663,11 +666,12 @@ export function createCues(options = {}) {
         resumeCounting = false;
         buzz('resume');
         const v = version(moveOf(event, snap, idx), altOf(event, snap, idx));
+        const name = v ? v.name : '';
         if (snap.kind === 'transition') {
           tone('transition');
-          guide(v ? `Rest. Next up: ${v.name}.` : 'Rest.');
+          guide(name ? `Rest. Next up: ${name}.` : 'Rest.');
         } else if (snap.kind === 'prep') {
-          guide(v ? `Get ready. First up: ${v.name}.` : 'Get ready.');
+          guide(name ? `Get ready. First up: ${name}.` : 'Get ready.');
         } else {
           tone('work');
           guide('Go.');
@@ -710,6 +714,12 @@ export function createCues(options = {}) {
   }
 
   // ---- public API ----------------------------------------------------------------
+
+  try {
+    hookVoices(); // start loading voices early (Chrome fills the list asynchronously)
+  } catch {
+    /* ignore */
+  }
 
   function unlock() {
     unlocked = true;

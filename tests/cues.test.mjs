@@ -531,13 +531,13 @@ describe('cues', () => {
     t = 1000;
     cues.handle(ev('countdown', { secondsLeft: 3 }));
     assert.ok(!synth.texts().includes('Three'));
-    // Guidance is (by estimate) over: "Two" goes straight out, no cancel needed.
-    t = 6000;
+    // Guidance is (by estimate, about 4.2 s) over: "Two" goes straight out, no cancel needed.
+    t = 4400;
     const before = synth.log.length;
     cues.handle(ev('countdown', { secondsLeft: 2 }));
     assert.deepEqual(synth.log.slice(before), [['speak', 'Two']]);
     // A countdown word still queued when the next is due is cancelled, not waited on.
-    t = 6010;
+    t = 4410;
     cues.handle(ev('countdown', { secondsLeft: 1 }));
     assert.deepEqual(synth.log.slice(-2), [['cancel'], ['speak', 'One']]);
     // A short phrase about to finish is waited on briefly instead of cut off.
@@ -550,6 +550,11 @@ describe('cues', () => {
     const mark = synth.log.length;
     cues.handle(ev('resume-countdown', { secondsLeft: 2 }));
     assert.deepEqual(synth.log.slice(mark), [['speak', 'Two']]);
+    // An engine still "speaking" long after everything should have ended is stuck
+    // (seen on iOS after backgrounding): clear it rather than queue behind it.
+    t = 20000;
+    cues.handle(ev('countdown', { secondsLeft: 1 }));
+    assert.deepEqual(synth.log.slice(-2), [['cancel'], ['speak', 'One']]);
   });
 
   test('skip while paused only names the new movement', () => {
