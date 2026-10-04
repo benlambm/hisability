@@ -3,7 +3,8 @@
 // Pose angles were solved numerically so planted feet stay put through every key: split stances,
 // wide stances and the bridge keep both contact points fixed, and keys marked `tween: true` are
 // in-between poses that keep the feet planted during long transitions (they are skipped in the
-// reduced-motion key strip). `dx` values pin the planted foot when the anchor foot is the moving one.
+// reduced-motion key strip). `dx` values pin the planted foot when the anchor foot is the moving one;
+// the alternating reverse lunge instead pins whichever front foot is planted with per-key `anchor`s.
 // If you edit a leg angle, re-check contacts with tools/render-demos.mjs.
 
 export default [
@@ -171,10 +172,10 @@ export default [
       focus: ['legs'],
       contacts: ['nearToe', 'nearAnkle', 'farToe'],
       keys: [
-        { pose: { torso: 3, nearArm: [225, 130], nearLeg: [147.8, 168.7], farLeg: [202.1, 223.1], farFoot: 130 }, dur: 0.65, hold: 0.2, ease: 'in' },
-        { pose: { torso: 5.5, nearArm: [227.5, 132.5], nearLeg: [124.4, 184.9], farLeg: [186.6, 247.3], farFoot: 130 }, dur: 0.65, hold: 0, ease: 'out', tween: true },
-        { pose: { torso: 8, nearArm: [230, 135], nearLeg: [103, 194], farLeg: [182.8, 270.7], farFoot: 130 }, dur: 0.5, hold: 0.2, ease: 'in' },
-        { pose: { torso: 5.5, nearArm: [227.5, 132.5], nearLeg: [124, 190.1], farLeg: [191.4, 247.6], farFoot: 130, dx: 0.2 }, dur: 0.5, hold: 0, ease: 'out', tween: true },
+        { pose: { torso: 3, nearArm: [225, 130], nearLeg: [147.8, 168.7], farLeg: [209.3, 215.6], farFoot: 125 }, dur: 0.65, hold: 0.2, ease: 'in' },
+        { pose: { torso: 5.5, nearArm: [227.5, 132.5], nearLeg: [124.4, 184.9], farLeg: [183.2, 250.6], farFoot: 141.5 }, dur: 0.65, hold: 0, ease: 'out', tween: true },
+        { pose: { torso: 8, nearArm: [230, 135], nearLeg: [103, 194], farLeg: [175.7, 276.2], farFoot: 158 }, dur: 0.5, hold: 0.2, ease: 'in' },
+        { pose: { torso: 5.5, nearArm: [227.5, 132.5], nearLeg: [124, 190.1], farLeg: [188, 251.2], farFoot: 141.5, dx: 0.2 }, dur: 0.5, hold: 0, ease: 'out', tween: true },
       ],
     },
     alt: {
@@ -189,10 +190,10 @@ export default [
         focus: ['legs'],
         contacts: ['nearToe', 'nearAnkle', 'farToe'],
         keys: [
-          { pose: { torso: 2, nearArm: [115.1, 87.7], farArm: [224, 129], nearLeg: [142.8, 176.2], farLeg: [198.9, 227.6], farFoot: 130 }, dur: 0.6, hold: 0.2, ease: 'in' },
-          { pose: { torso: 3, nearArm: [110.1, 74.1], farArm: [225, 130], nearLeg: [128.7, 187.3], farLeg: [189.5, 244], farFoot: 130 }, dur: 0.6, hold: 0, ease: 'out', tween: true },
-          { pose: { torso: 4, nearArm: [100, 65.6], farArm: [226, 131], nearLeg: [114.1, 192.7], farLeg: [183.1, 259.3], farFoot: 130 }, dur: 0.5, hold: 0.2, ease: 'in' },
-          { pose: { torso: 3, nearArm: [110.1, 74.1], farArm: [225, 130], nearLeg: [128.6, 182.8], farLeg: [185.8, 243.4], farFoot: 130, dx: 0.1 }, dur: 0.5, hold: 0, ease: 'out', tween: true },
+          { pose: { torso: 2, nearArm: [115.1, 87.7], farArm: [224, 129], nearLeg: [142.8, 176.2], farLeg: [203, 223.4], farFoot: 125 }, dur: 0.6, hold: 0.2, ease: 'in' },
+          { pose: { torso: 3, nearArm: [110.1, 74.1], farArm: [225, 130], nearLeg: [128.7, 187.3], farLeg: [187.8, 245.9], farFoot: 137.5 }, dur: 0.6, hold: 0, ease: 'out', tween: true },
+          { pose: { torso: 4, nearArm: [100, 65.6], farArm: [226, 131], nearLeg: [114.1, 192.7], farLeg: [177.5, 263.7], farFoot: 150 }, dur: 0.5, hold: 0.2, ease: 'in' },
+          { pose: { torso: 3, nearArm: [110.1, 74.1], farArm: [225, 130], nearLeg: [128.6, 182.8], farLeg: [183.7, 245.7], farFoot: 137.5, dx: 0.1 }, dur: 0.5, hold: 0, ease: 'out', tween: true },
         ],
       },
     },
@@ -253,7 +254,7 @@ export default [
   {
     id: 'good-morning',
     name: 'Good Morning',
-    say: 'Good mornings',
+    say: 'Good-morning hinges',
     category: 'lower',
     region: 'legs',
     pattern: 'hinge',
@@ -270,8 +271,8 @@ export default [
       focus: ['glutes', 'back'],
       contacts: ['nearToe', 'nearAnkle'],
       keys: [
-        { pose: { torso: 0, nearArm: [160, 345], farArm: [157, 342], nearLeg: [177, 183] }, dur: 1.4, hold: 0.2 },
-        { pose: { torso: 72, nearArm: [232, 57], farArm: [229, 54], nearLeg: [160, 186] }, dur: 1.1, hold: 0.2 },
+        { pose: { torso: 0, nearArm: [160, 10], farArm: [157, 7], nearLeg: [177, 183] }, dur: 1.4, hold: 0.2 },
+        { pose: { torso: 72, nearArm: [232, 82], farArm: [229, 79], nearLeg: [160, 186] }, dur: 1.1, hold: 0.2 },
       ],
     },
     alt: {

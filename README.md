@@ -42,10 +42,15 @@ node tools/stamp-sw.mjs --check   # is sw.js in step with the files? (exit 1 if 
 
 The site is static files only: no build, no server, no secrets.
 
-1. Push this repository to GitHub.
-2. **Settings > Pages > Build and deployment > Source: Deploy from a branch**, then choose your
-   branch (e.g. `main`) and folder **/ (root)**, and **Save**.
-3. After a minute or two the app is live at `https://<user>.github.io/hisability/`.
+This repository publishes from the **`gh-pages`** branch, root folder. Publishing is a push:
+
+```sh
+git push origin HEAD:gh-pages
+```
+
+GitHub turns Pages on for a pushed `gh-pages` branch. If it does not, open **Settings > Pages >
+Build and deployment > Source: Deploy from a branch**, choose `gh-pages` and **/ (root)**, and
+**Save**. After a minute or two the app is live at `https://benlambm.github.io/hisability/`.
 
 `.nojekyll` tells Pages to serve the files exactly as committed. Every path is relative, so the
 app also works under another repository name or a custom domain.
@@ -54,9 +59,9 @@ app also works under another repository name or a custom domain.
 
 1. Edit the files.
 2. Bump `APP_VERSION` in `js/config.js` (for example `1.0.0` to `1.0.1`).
-3. Run `node tools/stamp-sw.mjs`. It refreshes the precache list in `sw.js` and copies the
-   version into it (the offline cache becomes `his-ability-1.0.1`).
-4. Run `npm test`, then commit and push.
+3. Run `node tools/stamp-sw.mjs`. It refreshes the precache list in `sw.js`, copies the
+   version into it, and fingerprints the build, so every release gets its own offline cache.
+4. Run `npm test`, commit, then publish with `git push origin HEAD:gh-pages`.
 
 What people see: an installed app checks for a new version when it opens and when it comes back
 to the foreground (at most every 30 minutes). The new version downloads in the background, then
@@ -68,7 +73,8 @@ running until Refresh is tapped (or the app is fully closed and reopened).
 1. `git revert <bad-commit>`
 2. Bump `APP_VERSION` again, to a new higher number (never reuse an old one: the version names
    the offline cache), and run `node tools/stamp-sw.mjs`.
-3. Commit and push. Installed apps receive it like any other update.
+3. Commit and publish (`git push origin HEAD:gh-pages`). Installed apps receive it like any
+   other update.
 
 ## Install
 

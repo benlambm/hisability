@@ -3,9 +3,10 @@
 // Demo angles were solved numerically (figure.js normalizePose / solvePose / contactGaps) so the
 // listed contact joints rest on the floor in every key pose, then reviewed on demo sheets
 // (node tools/render-demos.mjs --cat core). Floor moves are drawn on a mat. Supine figures lie
-// with the head at screen-left (torso 273: shoulders and hips both touch the floor). Contacts are
-// empty where no single limb joint touches in every key: bird dog and standing knee crunch swap
-// the supporting limb, and the bicycle crunch rests only on the hips.
+// with the head at screen-left (torso 273: shoulders and hips both touch the floor). Moves that swap
+// the supporting limb (bird dog, standing knee crunch) declare per-key `contacts`, and the standing
+// knee crunch pins whichever foot is planted with per-key `anchor`s. Between sides, a lifted limb
+// first hovers over its own spot so the weight shift is straight up and down (no skidding).
 
 export default [
   {
@@ -21,7 +22,7 @@ export default [
     cue: 'Hold one straight line from head to heels.',
     mistake: 'Letting the hips sag or pushing them high.',
     caution: 'Lower your knees to the floor whenever you need a break.',
-    description: 'Figure holds a straight-body plank on its forearms and toes, breathing steadily.',
+    description: 'Side view. The figure holds a straight-body plank on its forearms and toes, breathing steadily.',
     demo: {
       view: 'side',
       anchor: { joint: 'nearElbow', x: 146 },
@@ -37,7 +38,7 @@ export default [
       name: 'Knee Forearm Plank',
       cue: 'Knees down, body straight from knees to head.',
       equipment: 'none',
-      description: 'Figure holds a plank on its forearms and knees, feet lifted, body straight from knees to head.',
+      description: 'Side view. The figure holds a plank on its forearms and knees, feet lifted, body straight from knees to head.',
       demo: {
         view: 'side',
         anchor: { joint: 'nearElbow', x: 146 },
@@ -65,7 +66,7 @@ export default [
     mistake: 'Letting the hips sink toward the floor.',
     caution: 'Use the knee version if your shoulder needs a break.',
     switchSides: true,
-    description: 'Figure, seen from the front, holds a side plank on one forearm with hips lifted and the top arm reaching up.',
+    description: 'Front view. The figure holds a side plank on one forearm with the hips lifted and the top arm reaching up.',
     demo: {
       view: 'front',
       anchor: { joint: 'nearElbow', x: 145 },
@@ -73,8 +74,8 @@ export default [
       props: [{ type: 'mat' }],
       contacts: ['nearElbow', 'nearHand', 'nearToe'],
       keys: [
-        { pose: { torso: 77.5, head: 77.5, nearArm: [180, 90], farArm: [17, 7], nearLeg: [257.5, 257.5], farLeg: [251.5, 251.5], nearFoot: 160, farFoot: 160 }, dur: 1.6, hold: 0.25 },
-        { pose: { torso: 80, head: 80, nearArm: [180, 90], farArm: [17, 7], nearLeg: [255.5, 255.5], farLeg: [249.5, 249.5], nearFoot: 160, farFoot: 160 }, dur: 1.6, hold: 0.25 },
+        { pose: { torso: 77.5, head: 77.5, nearArm: [180, 90], farArm: [12, 12], nearLeg: [257.5, 257.5], farLeg: [251.5, 251.5], nearFoot: 160, farFoot: 160 }, dur: 1.6, hold: 0.25 },
+        { pose: { torso: 80, head: 80, nearArm: [180, 90], farArm: [12, 12], nearLeg: [255.5, 255.5], farLeg: [249.5, 249.5], nearFoot: 160, farFoot: 160 }, dur: 1.6, hold: 0.25 },
       ],
     },
     alt: {
@@ -82,7 +83,7 @@ export default [
       cue: 'Bottom knee down, lift your hips off the floor.',
       equipment: 'none',
       switchSides: true,
-      description: 'Figure holds a side plank on one forearm and the bottom knee, hips lifted and top arm reaching up.',
+      description: 'Front view. The figure holds a side plank on one forearm and the bottom knee, hips lifted and the top arm reaching up.',
       demo: {
         view: 'front',
         anchor: { joint: 'nearElbow', x: 149 },
@@ -90,8 +91,8 @@ export default [
         props: [{ type: 'mat' }],
         contacts: ['nearElbow', 'nearHand', 'nearKnee'],
         keys: [
-          { pose: { torso: 69, head: 69, nearArm: [180, 90], farArm: [17, 7], nearLeg: [249, 275], farLeg: [242, 269], nearFoot: 250, farFoot: 250 }, dur: 1.6, hold: 0.25 },
-          { pose: { torso: 71.5, head: 71.5, nearArm: [180, 90], farArm: [17, 7], nearLeg: [246, 275], farLeg: [239, 269], nearFoot: 250, farFoot: 250 }, dur: 1.6, hold: 0.25 },
+          { pose: { torso: 69, head: 69, nearArm: [180, 90], farArm: [12, 12], nearLeg: [249, 275], farLeg: [242, 269], nearFoot: 250, farFoot: 250 }, dur: 1.6, hold: 0.25 },
+          { pose: { torso: 71.5, head: 71.5, nearArm: [180, 90], farArm: [12, 12], nearLeg: [246, 275], farLeg: [239, 269], nearFoot: 250, farFoot: 250 }, dur: 1.6, hold: 0.25 },
         ],
       },
     },
@@ -109,7 +110,7 @@ export default [
     cue: 'Lower opposite arm and leg, back stays down.',
     mistake: 'Letting the lower back arch off the floor.',
     caution: 'Keep your lower back supported; move only as far as you can control.',
-    description: 'Figure lies on its back with arms up and knees bent, then lowers one arm overhead and straightens the opposite leg, alternating sides.',
+    description: 'Side view. Lying on its back with the arms up and knees bent over the hips, the figure lowers one arm overhead and straightens the opposite leg, then alternates sides.',
     demo: {
       view: 'side',
       anchor: { joint: 'hip', x: 110 },
@@ -127,7 +128,7 @@ export default [
       name: 'Heel Taps',
       cue: 'Arms up, tap one heel to the floor, then switch.',
       equipment: 'none',
-      description: 'Figure lies on its back with arms up and knees bent over the hips, lowering one foot at a time to tap the heel on the floor.',
+      description: 'Side view. Lying on its back with the arms up and knees bent over the hips, the figure lowers one foot at a time to tap the heel on the floor.',
       demo: {
         view: 'side',
         anchor: { joint: 'hip', x: 104 },
@@ -156,36 +157,42 @@ export default [
     cue: 'Reach one arm forward and the opposite leg back.',
     mistake: 'Twisting the hips or arching the lower back.',
     caution: 'Place a folded towel under your knees for comfort.',
-    description: 'Figure on hands and knees reaches one arm forward and the opposite leg back, returns, and alternates sides.',
+    description: 'Side view. On hands and knees, the figure reaches one arm forward and the opposite leg back, holds, returns, and alternates sides.',
     demo: {
+      // Hip pinned. Each side: lift (hand straight up off its spot, knee drawn back), reach and hold,
+      // lift back; then a diagonal weight shift hands the work to the other arm and leg.
       view: 'side',
       anchor: { joint: 'hip', x: 90 },
       focus: ['core'],
       props: [{ type: 'mat' }],
-      contacts: [],
+      contacts: ['farHand', 'nearKnee'],
       keys: [
-        { pose: { torso: 76, head: 84, nearArm: [180, 180], farArm: [180, 180], nearLeg: [185, 284.5], farLeg: [185, 284.5], nearFoot: 185, farFoot: 185 }, dur: 0.6, hold: 0.15 },
-        { pose: { torso: 76, head: 84, nearArm: [70, 70], farArm: [180, 180], nearLeg: [185, 284.5], farLeg: [258, 262], nearFoot: 185, farFoot: 185 }, dur: 0.6, hold: 0.3 },
-        { pose: { torso: 76, head: 84, nearArm: [180, 180], farArm: [180, 180], nearLeg: [185, 284.5], farLeg: [185, 284.5], nearFoot: 185, farFoot: 185 }, dur: 0.6, hold: 0.15 },
-        { pose: { torso: 76, head: 84, nearArm: [180, 180], farArm: [70, 70], nearLeg: [258, 262], farLeg: [185, 284.5], nearFoot: 185, farFoot: 185 }, dur: 0.6, hold: 0.3 },
+        { pose: { torso: 76, head: 84, nearArm: [208.8, 148.6], farArm: [180, 180], nearLeg: [185, 284.5], farLeg: [200, 290], nearFoot: 185, farFoot: 200 }, dur: 0.6, hold: 0, tween: true },
+        { pose: { torso: 76, head: 84, nearArm: [70, 70], farArm: [180, 180], nearLeg: [185, 284.5], farLeg: [258, 262], nearFoot: 185, farFoot: 185 }, dur: 0.6, hold: 0.35 },
+        { pose: { torso: 76, head: 84, nearArm: [208.8, 148.6], farArm: [180, 180], nearLeg: [185, 284.5], farLeg: [200, 290], nearFoot: 185, farFoot: 200 }, dur: 0.3, hold: 0, tween: true },
+        { pose: { torso: 76, head: 84, nearArm: [180, 180], farArm: [208.8, 148.6], nearLeg: [200, 290], farLeg: [185, 284.5], nearFoot: 200, farFoot: 185 }, dur: 0.6, hold: 0, tween: true, contacts: ['nearHand', 'farKnee'] },
+        { pose: { torso: 76, head: 84, nearArm: [180, 180], farArm: [70, 70], nearLeg: [258, 262], farLeg: [185, 284.5], nearFoot: 185, farFoot: 185 }, dur: 0.6, hold: 0.35, contacts: ['nearHand', 'farKnee'] },
+        { pose: { torso: 76, head: 84, nearArm: [180, 180], farArm: [208.8, 148.6], nearLeg: [200, 290], farLeg: [185, 284.5], nearFoot: 200, farFoot: 185 }, dur: 0.3, hold: 0, tween: true, contacts: ['nearHand', 'farKnee'] },
       ],
     },
     alt: {
       name: 'Bird Dog Leg Reach',
       cue: 'Keep both hands down and reach one leg back.',
       equipment: 'none',
-      description: 'Figure on hands and knees keeps both hands on the floor and reaches one leg back at a time.',
+      description: 'Side view. On hands and knees, the figure keeps both hands on the floor and reaches one leg straight back at a time, returning between reaches.',
       demo: {
         view: 'side',
-        anchor: { joint: 'nearHand', x: 146 },
+        anchor: { joint: 'hip', x: 90 },
         focus: ['core'],
         props: [{ type: 'mat' }],
-        contacts: ['nearHand', 'farHand'],
+        contacts: ['nearHand', 'farHand', 'nearKnee'],
         keys: [
-          { pose: { torso: 76, head: 84, nearArm: [180, 180], farArm: [180, 180], nearLeg: [185, 284.5], farLeg: [185, 284.5], nearFoot: 185, farFoot: 185 }, dur: 0.6, hold: 0.15 },
-          { pose: { torso: 76, head: 84, nearArm: [180, 180], farArm: [180, 180], nearLeg: [185, 284.5], farLeg: [258, 262], nearFoot: 185, farFoot: 185 }, dur: 0.6, hold: 0.3 },
-          { pose: { torso: 76, head: 84, nearArm: [180, 180], farArm: [180, 180], nearLeg: [185, 284.5], farLeg: [185, 284.5], nearFoot: 185, farFoot: 185 }, dur: 0.6, hold: 0.15 },
-          { pose: { torso: 76, head: 84, nearArm: [180, 180], farArm: [180, 180], nearLeg: [258, 262], farLeg: [185, 284.5], nearFoot: 185, farFoot: 185 }, dur: 0.6, hold: 0.3 },
+          { pose: { torso: 76, head: 84, nearArm: [180, 180], farArm: [180, 180], nearLeg: [185, 284.5], farLeg: [200, 290], nearFoot: 185, farFoot: 200 }, dur: 0.6, hold: 0, tween: true },
+          { pose: { torso: 76, head: 84, nearArm: [180, 180], farArm: [180, 180], nearLeg: [185, 284.5], farLeg: [258, 262], nearFoot: 185, farFoot: 185 }, dur: 0.6, hold: 0.35 },
+          { pose: { torso: 76, head: 84, nearArm: [180, 180], farArm: [180, 180], nearLeg: [185, 284.5], farLeg: [200, 290], nearFoot: 185, farFoot: 200 }, dur: 0.3, hold: 0, tween: true },
+          { pose: { torso: 76, head: 84, nearArm: [180, 180], farArm: [180, 180], nearLeg: [200, 290], farLeg: [185, 284.5], nearFoot: 200, farFoot: 185 }, dur: 0.6, hold: 0, tween: true, contacts: ['nearHand', 'farHand', 'farKnee'] },
+          { pose: { torso: 76, head: 84, nearArm: [180, 180], farArm: [180, 180], nearLeg: [258, 262], farLeg: [185, 284.5], nearFoot: 185, farFoot: 185 }, dur: 0.6, hold: 0.35, contacts: ['nearHand', 'farHand', 'farKnee'] },
+          { pose: { torso: 76, head: 84, nearArm: [180, 180], farArm: [180, 180], nearLeg: [200, 290], farLeg: [185, 284.5], nearFoot: 200, farFoot: 185 }, dur: 0.3, hold: 0, tween: true, contacts: ['nearHand', 'farHand', 'farKnee'] },
         ],
       },
     },
@@ -203,7 +210,7 @@ export default [
     cue: 'Curl your shoulders up and reach toward your knees.',
     mistake: 'Leading with the chin instead of curling the upper back.',
     caution: 'Rest your head in your hands if your neck gets tired.',
-    description: 'Figure lies on its back with knees bent, curls its head and shoulders up while reaching toward the knees, then lowers.',
+    description: 'Side view. Lying on its back with the knees bent, the figure curls its head and shoulders up while reaching toward the knees, then lowers.',
     demo: {
       view: 'side',
       anchor: { joint: 'nearAnkle', x: 155 },
@@ -219,7 +226,7 @@ export default [
       name: 'Supported Crunch',
       cue: 'Cradle your head and lift your shoulders a little.',
       equipment: 'none',
-      description: 'Figure lies on its back with knees bent and hands behind the head, lifting the shoulders a small amount and lowering.',
+      description: 'Side view. Lying on its back with the knees bent and hands behind the head, the figure lifts the shoulders a small amount and lowers.',
       demo: {
         view: 'side',
         anchor: { joint: 'nearAnkle', x: 155 },
@@ -246,13 +253,13 @@ export default [
     cue: 'Bring each elbow toward the opposite knee.',
     mistake: 'Pulling on the head or rushing the legs.',
     caution: 'Keep your lower back supported; aim the straight leg higher to ease off.',
-    description: 'Figure lies with shoulders lifted and hands behind the head, drawing one knee in as the other leg reaches out, alternating like pedaling.',
+    description: 'Side view. Lying with the shoulders lifted and hands behind the head, the figure draws one knee in as the other leg reaches out, alternating like pedaling.',
     demo: {
       view: 'side',
       anchor: { joint: 'hip', x: 96 },
       focus: ['core'],
       props: [{ type: 'mat' }],
-      contacts: [],
+      contacts: ['hip'],
       keys: [
         { pose: { torso: 300, head: 314, nearArm: [7.5, 257.5], farArm: [20.5, 261], nearLeg: [342, 75], farLeg: [62, 62], nearFoot: 25, farFoot: 20 }, dur: 0.85, hold: 0.15 },
         { pose: { torso: 303, head: 317, nearArm: [23.5, 264], farArm: [10.5, 260.5], nearLeg: [62, 62], farLeg: [342, 75], nearFoot: 20, farFoot: 25 }, dur: 0.85, hold: 0.15 },
@@ -262,7 +269,7 @@ export default [
       name: 'Slow Bicycle',
       cue: 'Head down, slowly pedal one knee in, one leg out.',
       equipment: 'none',
-      description: 'Figure lies on its back with head down and arms by its sides, slowly pedaling the legs in and out.',
+      description: 'Side view. Lying on its back with the head down and arms by its sides, the figure slowly pedals the legs in and out.',
       demo: {
         view: 'side',
         anchor: { joint: 'hip', x: 111 },
@@ -270,8 +277,8 @@ export default [
         props: [{ type: 'mat' }],
         contacts: ['head', 'nearHand'],
         keys: [
-          { pose: { torso: 273, head: 269, nearArm: [97.5, 97.5], farArm: [97.5, 97.5], nearLeg: [345, 75], farLeg: [42, 42], nearFoot: 30, farFoot: 10 }, dur: 1.1, hold: 0.15 },
-          { pose: { torso: 273, head: 269, nearArm: [97.5, 97.5], farArm: [97.5, 97.5], nearLeg: [42, 42], farLeg: [345, 75], nearFoot: 10, farFoot: 30 }, dur: 1.1, hold: 0.15 },
+          { pose: { torso: 273, head: 269, nearArm: [97.5, 97.5], farArm: [97.5, 97.5], nearLeg: [345, 75], farLeg: [42, 42], nearFoot: 30, farFoot: 10 }, dur: 1.35, hold: 0.15 },
+          { pose: { torso: 273, head: 269, nearArm: [97.5, 97.5], farArm: [97.5, 97.5], nearLeg: [42, 42], farLeg: [345, 75], nearFoot: 10, farFoot: 30 }, dur: 1.35, hold: 0.15 },
         ],
       },
     },
@@ -289,7 +296,7 @@ export default [
     cue: 'Draw your knees toward your chest, hips curl up.',
     mistake: 'Swinging the legs to throw the hips up.',
     caution: 'Keep the movement small if your lower back feels it.',
-    description: 'Figure lies on its back with knees bent over its hips, then draws the knees toward the chest so the hips curl slightly off the floor.',
+    description: 'Side view. Lying on its back with the knees bent over the hips, the figure draws the knees toward the chest so the hips curl slightly off the floor.',
     demo: {
       view: 'side',
       anchor: { joint: 'head', x: 46 },
@@ -305,7 +312,7 @@ export default [
       name: 'Knee Tucks',
       cue: 'Tap both feet down, then draw your knees back in.',
       equipment: 'none',
-      description: 'Figure lies on its back, lowers both bent legs to tap the feet on the floor, then draws the knees back toward the chest.',
+      description: 'Side view. Lying on its back, the figure lowers both bent legs to tap the feet on the floor, then draws the knees back toward the chest.',
       demo: {
         view: 'side',
         anchor: { joint: 'head', x: 40 },
@@ -332,7 +339,7 @@ export default [
     cue: 'Lower your legs slowly, keeping your back down.',
     mistake: 'Letting the lower back arch as the legs drop.',
     caution: 'Keep your lower back supported; stop higher or bend your knees to ease off.',
-    description: 'Figure lies on its back with straight legs pointing up, slowly lowers them toward the floor without touching, and raises them again.',
+    description: 'Side view. Lying on its back with straight legs pointing up, the figure slowly lowers them toward the floor without touching, then raises them again.',
     demo: {
       view: 'side',
       anchor: { joint: 'hip', x: 98 },
@@ -340,15 +347,15 @@ export default [
       props: [{ type: 'mat' }],
       contacts: ['head', 'nearHand'],
       keys: [
-        { pose: { torso: 273, head: 269, nearArm: [97.5, 97.5], nearLeg: [0, 0], farLeg: [0, 0], nearFoot: 330, farFoot: 330 }, dur: 1.2, hold: 0.15 },
-        { pose: { torso: 273, head: 269, nearArm: [97.5, 97.5], nearLeg: [68, 68], farLeg: [68, 68], nearFoot: 40, farFoot: 40 }, dur: 1, hold: 0.25 },
+        { pose: { torso: 273, head: 269, nearArm: [97.5, 97.5], nearLeg: [0, 0], farLeg: [0, 0], nearFoot: 330, farFoot: 330 }, dur: 1.6, hold: 0.2 },
+        { pose: { torso: 273, head: 269, nearArm: [97.5, 97.5], nearLeg: [68, 68], farLeg: [68, 68], nearFoot: 40, farFoot: 40 }, dur: 1.1, hold: 0.3 },
       ],
     },
     alt: {
       name: 'Single-Leg Lowers',
       cue: 'Lower one leg at a time while the other stays up.',
       equipment: 'none',
-      description: 'Figure lies on its back with both legs up, lowering one straight leg at a time toward the floor and raising it again.',
+      description: 'Side view. Lying on its back with both legs up, the figure lowers one straight leg at a time toward the floor and raises it again.',
       demo: {
         view: 'side',
         anchor: { joint: 'hip', x: 98 },
@@ -377,34 +384,40 @@ export default [
     cue: 'Lift a knee to the side and crunch toward it.',
     mistake: 'Pulling the head forward with the hands.',
     caution: 'Stand near a wall to steady yourself if needed.',
-    description: 'Figure, seen from the front, stands with hands behind its head and lifts one knee out to the side while bending sideways to bring the elbow toward it, alternating sides.',
+    description: 'Front view. The figure stands with hands behind its head, lifts one knee out to the side to about hip height and bends sideways to bring that elbow toward it, then alternates sides.',
     demo: {
+      // The standing foot is pinned per key; the lifting foot hovers above its spot between reps so the
+      // weight shifts cleanly. Hands stay clasped behind the head (arms solved to reach it).
       view: 'front',
-      anchor: { joint: 'hip', x: 100 },
+      anchor: { joint: 'farAnkle', x: 92.5 },
       focus: ['core'],
-      contacts: [],
+      contacts: ['farToe', 'farAnkle'],
       keys: [
-        { pose: { torso: 0, head: 0, nearArm: [46, 282], farArm: [314, 78], nearLeg: [178, 180], farLeg: [182, 180], nearFoot: 105, farFoot: 255 }, dur: 0.45, hold: 0.1 },
-        { pose: { torso: 24, head: 30, nearArm: [86.5, 313], farArm: [341, 112.5], nearLeg: [52, 166], farLeg: [180, 180], nearFoot: 115, farFoot: 255, dx: -2 }, dur: 0.45, hold: 0.2 },
-        { pose: { torso: 0, head: 0, nearArm: [46, 282], farArm: [314, 78], nearLeg: [178, 180], farLeg: [182, 180], nearFoot: 105, farFoot: 255 }, dur: 0.45, hold: 0.1 },
-        { pose: { torso: 336, head: 330, nearArm: [19, 247.5], farArm: [273.5, 47], nearLeg: [180, 180], farLeg: [308, 194], nearFoot: 105, farFoot: 245, dx: 2 }, dur: 0.45, hold: 0.2 },
+        { pose: { torso: 26, head: 22, nearArm: [79, -61.8], farArm: [-7.7, 127.4], nearLeg: [92, 172], farLeg: [-172.3, 173.4], nearFoot: 110, farFoot: -105 }, dur: 0.45, hold: 0.2 },
+        { pose: { torso: 0, head: 0, nearArm: [35.9, -96.6], farArm: [-35.9, 96.6], nearLeg: [155.2, -153.8], farLeg: [-174.3, 174], nearFoot: 110, farFoot: -105 }, dur: 0.15, hold: 0, tween: true },
+        { pose: { torso: 0, head: 0, nearArm: [35.9, -96.6], farArm: [-35.9, 96.6], nearLeg: [174.3, -174], farLeg: [-155.2, 153.8], nearFoot: 105, farFoot: -110 }, dur: 0.45, hold: 0, tween: true, anchor: { joint: 'nearAnkle', x: 107.5 }, contacts: ['nearToe', 'nearAnkle'] },
+        { pose: { torso: -26, head: -22, nearArm: [7.7, -127.4], farArm: [-79, 61.8], nearLeg: [172.3, -173.4], farLeg: [-92, -172], nearFoot: 105, farFoot: -110 }, dur: 0.45, hold: 0.2, anchor: { joint: 'nearAnkle', x: 107.5 }, contacts: ['nearToe', 'nearAnkle'] },
+        { pose: { torso: 0, head: 0, nearArm: [35.9, -96.6], farArm: [-35.9, 96.6], nearLeg: [174.3, -174], farLeg: [-155.2, 153.8], nearFoot: 105, farFoot: -110 }, dur: 0.15, hold: 0, tween: true, anchor: { joint: 'nearAnkle', x: 107.5 }, contacts: ['nearToe', 'nearAnkle'] },
+        { pose: { torso: 0, head: 0, nearArm: [35.9, -96.6], farArm: [-35.9, 96.6], nearLeg: [155.2, -153.8], farLeg: [-174.3, 174], nearFoot: 110, farFoot: -105 }, dur: 0.45, hold: 0, tween: true },
       ],
     },
     alt: {
       name: 'Slow Side Crunch',
       cue: 'Lift your knee a little and lean gently toward it.',
       equipment: 'none',
-      description: 'Figure stands with hands behind its head and slowly lifts one knee a small amount while leaning gently toward it, alternating sides.',
+      description: 'Front view. The figure stands with hands behind its head and slowly lifts one knee partway out to the side while leaning gently toward it, alternating sides.',
       demo: {
         view: 'front',
-        anchor: { joint: 'hip', x: 100 },
+        anchor: { joint: 'farAnkle', x: 92.5 },
         focus: ['core'],
-        contacts: [],
+        contacts: ['farToe', 'farAnkle'],
         keys: [
-          { pose: { torso: 0, head: 0, nearArm: [46, 282], farArm: [314, 78], nearLeg: [178, 180], farLeg: [182, 180], nearFoot: 105, farFoot: 255 }, dur: 0.7, hold: 0.1 },
-          { pose: { torso: 9, head: 12, nearArm: [58.5, 290], farArm: [324, 91], nearLeg: [35, 165], farLeg: [180, 180], nearFoot: 125, farFoot: 255, dx: -1.5 }, dur: 0.7, hold: 0.2 },
-          { pose: { torso: 0, head: 0, nearArm: [46, 282], farArm: [314, 78], nearLeg: [178, 180], farLeg: [182, 180], nearFoot: 105, farFoot: 255 }, dur: 0.7, hold: 0.1 },
-          { pose: { torso: 351, head: 348, nearArm: [36, 269], farArm: [301.5, 70], nearLeg: [180, 180], farLeg: [325, 195], nearFoot: 105, farFoot: 235, dx: 1.5 }, dur: 0.7, hold: 0.2 },
+          { pose: { torso: 12, head: 8, nearArm: [50.4, -84.9], farArm: [-25, 109.8], nearLeg: [135, 172], farLeg: [-172.3, 173.4], nearFoot: 110, farFoot: -105 }, dur: 0.6, hold: 0.25 },
+          { pose: { torso: 0, head: 0, nearArm: [35.9, -96.6], farArm: [-35.9, 96.6], nearLeg: [157, -155.6], farLeg: [-174.3, 174], nearFoot: 110, farFoot: -105 }, dur: 0.2, hold: 0, tween: true },
+          { pose: { torso: 0, head: 0, nearArm: [35.9, -96.6], farArm: [-35.9, 96.6], nearLeg: [174.3, -174], farLeg: [-157, 155.6], nearFoot: 105, farFoot: -110 }, dur: 0.6, hold: 0, tween: true, anchor: { joint: 'nearAnkle', x: 107.5 }, contacts: ['nearToe', 'nearAnkle'] },
+          { pose: { torso: -12, head: -8, nearArm: [25, -109.8], farArm: [-50.4, 84.9], nearLeg: [172.3, -173.4], farLeg: [-135, -172], nearFoot: 105, farFoot: -110 }, dur: 0.6, hold: 0.25, anchor: { joint: 'nearAnkle', x: 107.5 }, contacts: ['nearToe', 'nearAnkle'] },
+          { pose: { torso: 0, head: 0, nearArm: [35.9, -96.6], farArm: [-35.9, 96.6], nearLeg: [174.3, -174], farLeg: [-157, 155.6], nearFoot: 105, farFoot: -110 }, dur: 0.2, hold: 0, tween: true, anchor: { joint: 'nearAnkle', x: 107.5 }, contacts: ['nearToe', 'nearAnkle'] },
+          { pose: { torso: 0, head: 0, nearArm: [35.9, -96.6], farArm: [-35.9, 96.6], nearLeg: [157, -155.6], farLeg: [-174.3, 174], nearFoot: 110, farFoot: -105 }, dur: 0.6, hold: 0, tween: true },
         ],
       },
     },

@@ -2,9 +2,9 @@
 //
 // Pose notes (js/figure.js): angles are absolute screen degrees, 0 up, 90 forward (screen right),
 // 180 down, 270 back. Knee flexion = shin - thigh; elbow flexion = upper - fore.
-// Demos whose standing foot alternates (marching, curls, wall climbers, skaters) cannot name one
-// joint that is down in every key, so their `contacts` list only what stays planted throughout
-// (possibly none); the standing foot of each key is noted beside it instead.
+// Demos whose standing foot alternates declare per-key `contacts` (and, where the planted foot changes
+// position, per-key `anchor`s). Stepping is done as a weight shift: the moving foot or hand first
+// hovers over the spot where it lands, so planted limbs never skid along the floor.
 // Keys marked `tween: true` are in-between poses; the reduced-motion key strip skips them.
 
 /** Side view: swap near and far limbs (the other leg / arm leads). Poses must list both sides. */
@@ -90,18 +90,20 @@ const CURL_HOVER = {
   nearArm: [140, 96], farArm: [140, 96], // arms reach forward
 };
 
-// ---- Mountain climbers (side view, hands pinned).
+// ---- Mountain climbers (side view, hands pinned at x 145). A knee drives in while the other toe stays
+// planted; the hips lift a little so the knee clears the floor. Between drives the returning foot
+// hovers over the back spot and the feet trade places straight up and down, so no toe skids.
 const CLIMB_IN = {
-  torso: 78, head: 82,
+  torso: 82, head: 88,
   nearArm: [178, 178], farArm: [178, 178],
-  nearLeg: [156, 285], nearFoot: 230, // near knee driven in under the chest, foot off the floor
-  farLeg: [245, 245], farFoot: 170,
+  nearLeg: [145, 300], nearFoot: 250, // near knee driven in under the chest
+  farLeg: [244, 244], farFoot: 180, // far toe planted back
 };
-const CLIMB_PASS = {
-  torso: 82, head: 84, // legs scissor past each other; hips bob up slightly so the knees clear the floor
-  nearArm: [184, 184], farArm: [184, 184],
-  nearLeg: [230, 258], nearFoot: 200, // going back
-  farLeg: [202, 281], farFoot: 205, // coming in
+const CLIMB_HOVER = {
+  torso: 76, head: 82,
+  nearArm: [180, 180], farArm: [180, 180],
+  nearLeg: [243.4, 265.3], nearFoot: 182, // near foot hovering over the back spot
+  farLeg: [248.2, 248.2], farFoot: 174,
 };
 const PLANK = {
   torso: 72, head: 80,
@@ -252,10 +254,10 @@ export default [
     mistake: 'Landing flat-footed with locked knees.',
     caution: 'Land softly on the balls of your feet.',
     description:
-      'Figure jumps the feet out wide while sweeping both arms overhead, then jumps back to feet together with arms down.',
+      'Front view. The figure jumps the feet out wide while sweeping both arms overhead, then jumps back to feet together with the arms down.',
     demo: {
       view: 'front',
-      focus: ['full'],
+      focus: ['legs', 'arms'],
       contacts: ['nearToe', 'farToe'],
       keys: [
         { pose: { nearArm: [174, 178], nearLeg: [179, 180] }, dur: 0.15, hold: 0.04, ease: 'out' },
@@ -269,7 +271,7 @@ export default [
       cue: 'Step one foot out as both arms rise overhead.',
       equipment: 'none',
       description:
-        'Figure steps one foot out to the side while raising both arms overhead, steps back in, then repeats to the other side.',
+        'Front view. The figure lifts one foot and steps it out to the side as both arms rise overhead, steps back in, then repeats to the other side.',
       demo: {
         // The standing foot is pinned per key; the stepping foot lifts above its spot, steps out, comes
         // back to hover there, and the weight shifts so the other foot lifts straight up.
@@ -304,7 +306,7 @@ export default [
     mistake: 'Leaning back as the knees come up.',
     caution: 'Stay light on the balls of your feet.',
     description:
-      'Figure runs in place, driving the knees up to hip height one at a time while the arms pump in opposition.',
+      'Side view. The figure runs in place, driving the knees up to hip height one at a time while the arms pump in opposition.',
     demo: {
       view: 'side',
       focus: ['legs', 'core'],
@@ -321,7 +323,7 @@ export default [
       cue: 'March in place, lifting each knee toward hip height.',
       equipment: 'none',
       description:
-        'Figure marches in place, lifting one knee at a time toward hip height while the other foot stays on the floor and the arms swing.',
+        'Side view. The figure marches in place, lifting one knee at a time toward hip height while the other foot stays on the floor and the arms swing.',
       demo: {
         view: 'side',
         focus: ['legs', 'core'],
@@ -353,17 +355,19 @@ export default [
     mistake: 'Letting the hips pike up or sag toward the floor.',
     caution: 'Slow down if your wrists or shoulders need a break.',
     description:
-      'Figure holds a high plank and drives the knees toward the chest one at a time at a quick pace.',
+      'Side view. Holding a high plank, the figure drives the knees toward the chest one at a time at a quick pace.',
     demo: {
       view: 'side',
       anchor: { joint: 'nearHand', x: 145 },
       focus: ['core', 'legs'],
       contacts: ['nearHand', 'farHand'],
       keys: [
-        { pose: CLIMB_IN, dur: 0.18, hold: 0.04, ease: 'in' },
-        { pose: CLIMB_PASS, dur: 0.18, hold: 0, ease: 'out', tween: true },
-        { pose: swap(CLIMB_IN), dur: 0.18, hold: 0.04, ease: 'in' },
-        { pose: swap(CLIMB_PASS), dur: 0.18, hold: 0, ease: 'out', tween: true },
+        { pose: CLIMB_IN, dur: 0.14, hold: 0.04, ease: 'in', contacts: ['nearHand', 'farHand', 'farToe'] },
+        { pose: CLIMB_HOVER, dur: 0.08, hold: 0, ease: 'linear', tween: true, contacts: ['nearHand', 'farHand', 'farToe'] },
+        { pose: swap(CLIMB_HOVER), dur: 0.14, hold: 0, ease: 'out', tween: true, contacts: ['nearHand', 'farHand', 'nearToe'] },
+        { pose: swap(CLIMB_IN), dur: 0.14, hold: 0.04, ease: 'in', contacts: ['nearHand', 'farHand', 'nearToe'] },
+        { pose: swap(CLIMB_HOVER), dur: 0.08, hold: 0, ease: 'linear', tween: true, contacts: ['nearHand', 'farHand', 'nearToe'] },
+        { pose: CLIMB_HOVER, dur: 0.14, hold: 0, ease: 'out', tween: true, contacts: ['nearHand', 'farHand', 'farToe'] },
       ],
     },
     alt: {
@@ -371,7 +375,7 @@ export default [
       cue: 'Hands on a wall, drive one knee up, then switch.',
       equipment: 'wall',
       description:
-        'Figure leans into a wall with straight arms and drives one knee up toward the chest at a time while the other foot stays on the floor.',
+        'Side view. Leaning into a wall with straight arms, the figure drives one knee up toward the chest at a time while the other foot stays on the floor.',
       demo: {
         view: 'side',
         anchor: { joint: 'nearHand', x: 165.4 },
@@ -405,10 +409,10 @@ export default [
     mistake: 'Landing with stiff legs or knees falling inward.',
     caution: 'Land softly and sink straight into the next squat.',
     description:
-      'Figure lowers into a squat with the arms swinging back, jumps straight up with the arms reaching high, and lands softly back into a squat.',
+      'Side view. The figure lowers into a squat with the arms swinging back, jumps straight up with the arms reaching high, and lands softly back into a squat.',
     demo: {
       view: 'side',
-      anchor: { joint: 'nearAnkle', x: 96 },
+      anchor: { joint: 'nearToe', x: 108.8 },
       focus: ['legs'],
       contacts: ['nearToe'],
       keys: [
@@ -423,7 +427,7 @@ export default [
       cue: 'Squat down, then stand and rise onto your toes.',
       equipment: 'none',
       description:
-        'Figure lowers into a squat with arms forward, then stands tall and rises onto the toes with arms reaching up.',
+        'Side view. The figure lowers into a squat with the arms forward, then stands tall and rises onto the toes with the arms reaching up.',
       demo: {
         view: 'side',
         anchor: { joint: 'nearToe', x: 104 },
@@ -452,15 +456,15 @@ export default [
     mistake: 'Landing on a straight, stiff knee.',
     caution: 'Land softly, and shorten the hop if you need to.',
     description:
-      'Figure hops sideways from one foot to the other, landing softly while the trailing leg sweeps behind and the arms swing across.',
+      'Front view. The figure hops sideways from one foot to the other, landing softly while the trailing leg sweeps behind and the arms swing across.',
     demo: {
       view: 'front',
       focus: ['legs'],
-      contacts: [],
+      contacts: ['nearToe', 'nearAnkle'],
       keys: [
         { pose: SKATE_LAND, dur: 0.2, hold: 0.08, ease: 'linear' }, // lands on near foot
-        { pose: SKATE_AIR, dur: 0.2, hold: 0, ease: 'linear' },
-        { pose: mirror(SKATE_LAND), dur: 0.2, hold: 0.08, ease: 'linear' }, // lands on far foot
+        { pose: SKATE_AIR, dur: 0.2, hold: 0, ease: 'linear', tween: true },
+        { pose: mirror(SKATE_LAND), dur: 0.2, hold: 0.08, ease: 'linear', contacts: ['farToe', 'farAnkle'] }, // lands on far foot
         { pose: mirror(SKATE_AIR), dur: 0.2, hold: 0, ease: 'linear', tween: true },
       ],
     },
@@ -502,11 +506,11 @@ export default [
     mistake: 'Letting the hips sag in the plank.',
     caution: 'Step back instead of jumping whenever you need to.',
     description:
-      'Figure squats and places the hands down, jumps the feet back to a plank, jumps them back in, then jumps up reaching high.',
+      'Side view. The figure squats and places the hands down, hops the feet back to a plank, hops them back in, then jumps straight up reaching high.',
     demo: {
       view: 'side',
       anchor: { joint: 'nearHand', x: 150 },
-      focus: ['legs', 'chest'],
+      focus: ['legs', 'shoulders'],
       contacts: ['nearHand', 'farHand'],
       keys: [
         { pose: CROUCH, dur: 0.24, hold: 0.2, ease: 'out', contacts: ['nearHand', 'farHand', 'nearToe', 'farToe'] },
@@ -522,18 +526,18 @@ export default [
       cue: 'Hands down, step back to plank, step in, stand tall.',
       equipment: 'none',
       description:
-        'Figure bends down to place the hands on the floor, steps one foot at a time back to a plank, steps back in, and stands tall reaching up.',
+        'Side view. The figure bends down to place the hands on the floor, steps one foot at a time back to a plank, steps back in one foot at a time, and stands tall reaching up.',
       demo: {
         view: 'side',
         anchor: { joint: 'farToe', x: 62 },
-        focus: ['legs', 'chest'],
+        focus: ['legs', 'shoulders'],
         contacts: ['nearHand', 'farHand'],
         keys: [
           { pose: { torso: 2, nearArm: [22, 14], farArm: [22, 14], nearLeg: [180, 180], farLeg: [180, 180] }, dur: 0.75, hold: 0.25, contacts: ['nearToe', 'farToe'] },
           { pose: SB_HANDS_DOWN, dur: 0.5, hold: 0.05, anchor: { joint: 'nearHand', x: 134 }, contacts: ['nearHand', 'farHand', 'farToe'] },
-          { pose: SB_ONE_BACK, dur: 0.5, hold: 0.05, anchor: { joint: 'nearHand', x: 134 }, contacts: ['nearHand', 'farHand', 'nearToe'] },
+          { pose: SB_ONE_BACK, dur: 0.5, hold: 0.05, tween: true, anchor: { joint: 'nearHand', x: 134 }, contacts: ['nearHand', 'farHand', 'nearToe'] },
           { pose: SB_PLANK, dur: 0.5, hold: 0.3, anchor: { joint: 'nearHand', x: 134 }, contacts: ['nearHand', 'farHand', 'nearToe', 'farToe'] },
-          { pose: SB_ONE_IN, dur: 0.5, hold: 0.05, anchor: { joint: 'nearHand', x: 134 }, contacts: ['nearHand', 'farHand', 'farToe'] },
+          { pose: SB_ONE_IN, dur: 0.5, hold: 0.05, tween: true, anchor: { joint: 'nearHand', x: 134 }, contacts: ['nearHand', 'farHand', 'farToe'] },
           { pose: swap(SB_HANDS_DOWN), dur: 0.75, hold: 0.05, anchor: { joint: 'nearToe', x: 62 }, contacts: ['nearHand', 'farHand', 'nearToe'] },
         ],
       },
@@ -555,7 +559,7 @@ export default [
     mistake: 'Leaning forward from the waist.',
     caution: 'Stay light on the balls of your feet.',
     description:
-      'Figure jogs in place, kicking each heel up toward the seat while the arms pump in opposition.',
+      'Side view. The figure jogs in place, kicking each heel up toward the seat while the arms pump in opposition.',
     demo: {
       view: 'side',
       focus: ['legs'],
@@ -572,7 +576,7 @@ export default [
       cue: 'Curl one heel up toward your seat, then switch.',
       equipment: 'none',
       description:
-        'Figure stands tall and curls one heel up behind at a time while drawing the elbows back, keeping the other foot on the floor.',
+        'Side view. Standing tall, the figure curls one heel up behind at a time while drawing the elbows back, keeping the other foot on the floor.',
       demo: {
         view: 'side',
         focus: ['legs'],
@@ -603,7 +607,7 @@ export default [
     cue: 'Punch straight ahead, alternating arms, staying light.',
     mistake: 'Snapping the elbow straight at full reach.',
     description:
-      'Figure stands in a staggered stance with fists up and throws alternating straight punches with a light bounce in the knees.',
+      'Side view. In a staggered stance with fists up, the figure throws alternating straight punches with a light bounce in the knees.',
     demo: {
       view: 'side',
       anchor: { joint: 'nearToe', x: 122 },
@@ -652,7 +656,7 @@ export default [
     mistake: 'Letting the hips sag when the hands reach the plank.',
     caution: 'Bend your knees as much as you need to reach the floor.',
     description:
-      'Figure folds forward to place the hands on the floor, walks the hands out to a plank, walks them back to the feet, and stands up.',
+      'Side view. The figure folds forward to place the hands on the floor, walks the hands out to a plank, walks them back to the feet, and stands up.',
     demo: {
       view: 'side',
       anchor: { joint: 'nearToe', x: 38 },
@@ -661,9 +665,9 @@ export default [
       keys: [
         { pose: { torso: 0, nearArm: [180, 180], nearLeg: [180, 180] }, dur: 0.6, hold: 0.2 },
         { pose: WORM_FOLD, dur: 0.5, hold: 0.05, contacts: ['nearToe', 'farToe', 'farHand'] },
-        { pose: WORM_REACH, dur: 0.35, hold: 0.05, contacts: ['nearToe', 'farToe', 'nearHand'] },
+        { pose: WORM_REACH, dur: 0.35, hold: 0.05, tween: true, contacts: ['nearToe', 'farToe', 'nearHand'] },
         { pose: WORM_PLANK, dur: 0.35, hold: 0.35, contacts: ['nearToe', 'farToe', 'nearHand', 'farHand'] },
-        { pose: swap(WORM_REACH), dur: 0.5, hold: 0.05, contacts: ['nearToe', 'farToe', 'farHand'] },
+        { pose: swap(WORM_REACH), dur: 0.5, hold: 0.05, tween: true, contacts: ['nearToe', 'farToe', 'farHand'] },
         { pose: swap(WORM_FOLD), dur: 0.6, hold: 0.05, contacts: ['nearToe', 'farToe', 'nearHand'] },
       ],
     },
@@ -672,7 +676,7 @@ export default [
       cue: 'Bend your knees, walk your hands out partway and back.',
       equipment: 'none',
       description:
-        'Figure bends the knees to place the hands on the floor, walks the hands out partway with the hips high, walks them back, and stands up.',
+        'Side view. Bending the knees, the figure places the hands on the floor, walks them out partway with the hips high, walks them back, and stands up.',
       demo: {
         view: 'side',
         anchor: { joint: 'nearToe', x: 55 },
@@ -681,9 +685,9 @@ export default [
         keys: [
           { pose: { torso: 0, nearArm: [180, 180], nearLeg: [180, 180] }, dur: 0.8, hold: 0.2 },
           { pose: HALF_WORM_FOLD, dur: 0.55, hold: 0.05, contacts: ['nearToe', 'farToe', 'farHand'] },
-          { pose: HALF_WORM_REACH, dur: 0.45, hold: 0.05, contacts: ['nearToe', 'farToe', 'nearHand'] },
+          { pose: HALF_WORM_REACH, dur: 0.45, hold: 0.05, tween: true, contacts: ['nearToe', 'farToe', 'nearHand'] },
           { pose: HALF_WORM_PIKE, dur: 0.45, hold: 0.4, contacts: ['nearToe', 'farToe', 'nearHand', 'farHand'] },
-          { pose: swap(HALF_WORM_REACH), dur: 0.55, hold: 0.05, contacts: ['nearToe', 'farToe', 'farHand'] },
+          { pose: swap(HALF_WORM_REACH), dur: 0.55, hold: 0.05, tween: true, contacts: ['nearToe', 'farToe', 'farHand'] },
           { pose: swap(HALF_WORM_FOLD), dur: 0.8, hold: 0.05, contacts: ['nearToe', 'farToe', 'nearHand'] },
         ],
       },

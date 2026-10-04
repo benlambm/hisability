@@ -14,7 +14,7 @@
 'use strict';
 
 const CACHE_VERSION = '1.0.0';
-const BUILD = 'd24eb661a7b9b4a8';
+const BUILD = '3f0b032fa7b900d1';
 const CACHE_PREFIX = 'his-ability-';
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + '-' + BUILD;
 const SHELL = 'index.html';
@@ -22,7 +22,7 @@ const MATCH = { ignoreVary: true }; // one representation per URL; ignore Vary: 
 
 const ASSETS = [
   /* ASSETS:START */
-  // fingerprint d24eb661a7b9b4a8 (written by tools/stamp-sw.mjs; changes when any file below changes)
+  // fingerprint 3f0b032fa7b900d1 (written by tools/stamp-sw.mjs; changes when any file below changes)
   './',
   'css/app.css',
   'css/figure.css',
