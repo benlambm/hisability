@@ -243,6 +243,7 @@ function ensureCues() {
 
 function startWorkout() {
   if (!state.workout || state.session) return;
+  toaster.clearPassive();
   // Must run synchronously inside the tap: unlocks WebAudio and speech on iOS Safari.
   ensureCues();
   try {

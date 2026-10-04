@@ -27,6 +27,7 @@ export function createHome(root, handlers) {
   );
 
   const list = h('ol', { class: 'move-list', 'aria-label': 'Movements in order' });
+  const equipNote = h('p', { class: 'workout-sub' }, 'No equipment needed');
   const cardBody = h('div', { class: 'workout-body' }, list);
   const card = h(
     'section',
@@ -41,7 +42,7 @@ export function createHome(root, handlers) {
         h('h2', { class: 'workout-title', id: 'workout-heading' },
           h('span', { class: 'visually-hidden' }, 'Seven minutes, '),
           '12 movements'),
-        h('p', { class: 'workout-sub' }, 'No equipment needed'),
+        equipNote,
       ),
     ),
     cardBody,
@@ -103,6 +104,8 @@ export function createHome(root, handlers) {
       );
     });
     list.replaceChildren(...rows);
+    const wall = workout.moves.some((m, i) => (alternatives?.[i] ? m.alt.equipment : m.equipment) === 'wall');
+    equipNote.textContent = wall ? 'No equipment, just a wall' : 'No equipment needed';
   }
 
   function renderError(message) {

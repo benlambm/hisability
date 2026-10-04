@@ -117,11 +117,21 @@ demo: {
   props: [{ type: 'wall', x: 170 }],     // optional: wall {x, side}, chair {x, seat, facing}, mat {x1, x2}
   contacts: ['nearToe', 'nearHand'],     // authoring metadata: joints that should touch the floor in
                                          //   every non-airborne key (checked by tests, <= 3.5 units)
+  depth: false,                          // front view only: draw far limbs muted (crossing legs)
   keys: [                                // 2-6 key poses, looped in order back to the first
     { pose: {...}, dur: 0.8, hold: 0.15, ease: 'inOut' },  // dur: seconds to next key; hold: pause
+    // optional per key:
+    //   tween: true      in-between pose; hidden from the reduced-motion key strip
+    //   anchor: {...}    pins this joint during this key's hold and the move to the next key
+    //                    (switching anchors must not make the figure jump; tests check this)
+    //   contacts: [...]  floor contacts for this key, overriding demo.contacts
   ],
 }
 ```
+
+Figures are framed automatically: `demoFrame(demo)` measures everything the demo draws over its
+loop and the SVG viewBox zooms to it, so lying-down movements fill their stage. Pass
+`{ frame: 'scene' }` to `buildFigureSVG` for the fixed 200 x 200 scene (authoring sheets use it).
 
 Pose: `{ torso, head, nearArm: [upper, fore], farArm, nearLeg: [thigh, shin], farLeg, nearFoot,
 farFoot, lift, dx }`. Angles are absolute screen-space degrees for the direction from the

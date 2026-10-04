@@ -1248,7 +1248,7 @@ dialog::backdrop {
   z-index: 40;
   left: 0;
   right: 0;
-  bottom: calc(var(--safe-b) + 16px);
+  top: calc(var(--safe-t) + 12px);
   display: grid;
   justify-items: center;
   gap: 8px;
@@ -1258,7 +1258,6 @@ dialog::backdrop {
 
 body[data-screen="player"] .toasts {
   top: calc(var(--safe-t) + 112px);
-  bottom: auto;
 }
 
 .toast {
@@ -1800,6 +1799,16 @@ body[data-screen="player"] .toasts {
 
 .ctl-pause {
   padding: 0 6px;
+}
+
+/* Ring the round icon, not the whole icon-plus-label box. */
+.ctl:focus-visible {
+  outline: none;
+}
+
+.ctl:focus-visible .ctl-icon {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
 }
 
 .ctl-pause .ctl-icon {

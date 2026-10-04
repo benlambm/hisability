@@ -41,8 +41,8 @@ const MOVE_OPTIONAL_TEXT = ['say', 'caution'];
 const ALT_FIELDS = ['name', 'say', 'cue', 'equipment', 'description', 'demo', 'switchSides', 'setup', 'mistake', 'caution'];
 const ALT_REQUIRED_TEXT = ['name', 'cue', 'description'];
 const ALT_OPTIONAL_TEXT = ['say', 'setup', 'mistake', 'caution'];
-const DEMO_FIELDS = ['view', 'anchor', 'focus', 'props', 'contacts', 'keys'];
-const KEY_FIELDS = ['pose', 'dur', 'hold', 'ease', 'tween'];
+const DEMO_FIELDS = ['view', 'anchor', 'focus', 'props', 'contacts', 'keys', 'depth'];
+const KEY_FIELDS = ['pose', 'dur', 'hold', 'ease', 'tween', 'anchor', 'contacts'];
 const POSE_FIELDS = ['torso', 'head', 'nearArm', 'farArm', 'nearLeg', 'farLeg', 'nearFoot', 'farFoot', 'lift', 'dx'];
 const POSE_ANGLES = ['torso', 'head', 'nearFoot', 'farFoot'];
 const POSE_PAIRS = ['nearArm', 'farArm', 'nearLeg', 'farLeg'];
@@ -199,7 +199,8 @@ function checkDemo(demo, where, errors, warnings, { isDefault }) {
       contacts = demo.contacts.filter((c) => JOINTS.includes(c));
     }
   }
-  if (contacts.length === 0) warnings.push(`${where} declares no floor contacts, so grounding is unchecked`);
+  const keyContacts = Array.isArray(demo.keys) && demo.keys.some((k) => isObj(k) && Array.isArray(k.contacts) && k.contacts.length);
+  if (contacts.length === 0 && !keyContacts) warnings.push(`${where} declares no floor contacts, so grounding is unchecked`);
 
   if (!Array.isArray(demo.keys)) {
     errors.push(`${where}.keys must be an array`);
@@ -219,6 +220,25 @@ function checkDemo(demo, where, errors, warnings, { isDefault }) {
     if (key.hold !== undefined && !(finite(key.hold) && key.hold >= 0)) errors.push(`${kw}.hold must be >= 0, got ${q(key.hold)}`);
     if (key.ease !== undefined && !EASES.includes(key.ease)) errors.push(`${kw}.ease ${q(key.ease)} is not one of ${EASES.join(', ')}`);
     if (key.tween !== undefined && typeof key.tween !== 'boolean') errors.push(`${kw}.tween must be a boolean`);
+    let ownContacts = null;
+    if (key.contacts !== undefined) {
+      if (!Array.isArray(key.contacts) || !key.contacts.every((c) => JOINTS.includes(c))) {
+        errors.push(`${kw}.contacts must be an array of joint names`);
+      } else ownContacts = key.contacts;
+    }
+    if (key.anchor !== undefined) {
+      if (!isObj(key.anchor) || !JOINTS.includes(key.anchor.joint) || !finite(key.anchor.x)) {
+        errors.push(`${kw}.anchor must be { joint: <joint name>, x: <number> }`);
+      } else if (isObj(demo.anchor) || i > 0 || demo.keys.length > 1) {
+        // Switching the pinned joint must not make the figure jump at this key.
+        const prev = demo.keys[(i - 1 + demo.keys.length) % demo.keys.length];
+        const before = (isObj(prev) && prev.anchor) || demo.anchor || { joint: 'hip', x: 100 };
+        const norm = normalizePose(key.pose, view);
+        const a = solvePose({ ...norm, anchor: before }, demo).joints.hip[0];
+        const b = solvePose({ ...norm, anchor: key.anchor }, demo).joints.hip[0];
+        if (Math.abs(a - b) > 1) errors.push(`${kw}.anchor switch makes the figure jump ${Math.abs(a - b).toFixed(1)} units`);
+      }
+    }
 
     const pose = key.pose;
     unknownFields(pose, POSE_FIELDS, `${kw}.pose`, errors);
@@ -249,15 +269,16 @@ function checkDemo(demo, where, errors, warnings, { isDefault }) {
     const airborne = Boolean(pose.lift);
     if (airborne) info.airborneKeys++;
     if (!anchorOk) return;
-    const solved = solvePose(normalizePose(pose, view), demo);
+    const solved = solvePose(key.anchor && isObj(key.anchor) ? { ...normalizePose(pose, view), anchor: key.anchor } : normalizePose(pose, view), demo);
     for (const [joint, [x, y]] of Object.entries(solved.joints)) {
       if (!(x >= SCENE.xMin && x <= SCENE.xMax && y >= SCENE.yMin && y <= SCENE.yMax)) {
         errors.push(`${kw}: joint ${joint} at (${x.toFixed(1)}, ${y.toFixed(1)}) is outside the scene ` +
           `(x ${SCENE.xMin}..${SCENE.xMax}, y ${SCENE.yMin}..${SCENE.yMax})`);
       }
     }
-    if (!airborne && contacts.length) {
-      const gaps = contactGaps(solved, contacts);
+    const useContacts = ownContacts ?? contacts;
+    if (!airborne && useContacts.length) {
+      const gaps = contactGaps(solved, useContacts);
       for (const [joint, gap] of Object.entries(gaps)) {
         if (!(Math.abs(gap) <= CONTACT_TOLERANCE)) {
           errors.push(`${kw}: contact ${joint} is ${gap} units from the floor (|gap| must be <= ${CONTACT_TOLERANCE})`);

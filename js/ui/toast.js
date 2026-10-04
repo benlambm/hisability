@@ -44,5 +44,9 @@ export function createToaster(root) {
     if (duration > 0) timer = setTimeout(dismiss, duration);
     return { dismiss, el: toast };
   }
-  return { show };
+  /** Remove passive toasts (those without actions), e.g. when a workout starts. */
+  function clearPassive() {
+    for (const t of root.querySelectorAll('.toast')) if (!t.querySelector('.toast-btn')) t.remove();
+  }
+  return { show, clearPassive };
 }

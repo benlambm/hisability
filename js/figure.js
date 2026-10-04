@@ -142,18 +142,27 @@ export function poseAt(demo, t) {
   if (keys.length === 1) return norm[0];
   const cycle = cycleSeconds(demo);
   let tt = ((t % cycle) + cycle) % cycle;
+  // A key's own `anchor` pins its joint through that key's hold and the move to the next key.
+  const pinned = (pose, key) => (key.anchor ? { ...pose, anchor: key.anchor } : pose);
   for (let i = 0; i < keys.length; i++) {
     const hold = keyHold(keys[i]);
-    if (tt < hold) return norm[i];
+    if (tt < hold) return pinned(norm[i], keys[i]);
     tt -= hold;
     const dur = keyDur(keys[i]);
     if (tt < dur) {
       const ease = EASE[keys[i].ease ?? 'inOut'] ?? EASE.inOut;
-      return interpolatePose(norm[i], norm[(i + 1) % keys.length], ease(tt / dur));
+      return pinned(interpolatePose(norm[i], norm[(i + 1) % keys.length], ease(tt / dur)), keys[i]);
     }
     tt -= dur;
   }
-  return norm[0];
+  return pinned(norm[0], keys[0]);
+}
+
+/** The pose shown while holding key i (normalized, with its anchor override). */
+export function keyPose(demo, i) {
+  const key = demo.keys[i];
+  const pose = normalizePose(key.pose, demo.view ?? 'side');
+  return key.anchor ? { ...pose, anchor: key.anchor } : pose;
 }
 
 /** Forward kinematics with the hip at the origin. Returns joint positions keyed by JOINTS. */
@@ -210,7 +219,7 @@ export function solvePose(pose, demo = {}) {
   let lowest = -Infinity;
   for (const [name, r] of Object.entries(SURFACE)) lowest = Math.max(lowest, j[name][1] + r);
   const dy = GROUND_Y - lowest - (pose.lift || 0);
-  const anchor = demo.anchor ?? { joint: 'hip', x: SIZE / 2 };
+  const anchor = pose.anchor ?? demo.anchor ?? { joint: 'hip', x: SIZE / 2 };
   const ax = j[anchor.joint] ? j[anchor.joint][0] : 0;
   const dx = anchor.x - ax + (pose.dx || 0);
   const joints = {};
@@ -245,14 +254,80 @@ function focusSet(demo) {
   return set;
 }
 
-function drawProps(g, demo) {
+const wallLeft = (prop) => {
+  const x = prop.x ?? 170;
+  const rightSide = (prop.side ?? (x > SIZE / 2 ? 'right' : 'left')) === 'right';
+  return rightSide ? x : x - 14;
+};
+
+const frameCache = new WeakMap();
+
+/**
+ * Tight bounds of everything a demo draws over its whole loop, padded, in scene units:
+ * { x, y, w, h, figMinX, figMaxX, top }. Figures are framed with this so a lying-down movement
+ * fills its stage as well as a standing one. The ground always sits near the bottom edge.
+ */
+export function demoFrame(demo) {
+  const cached = frameCache.get(demo);
+  if (cached) return cached;
+  const view = demo.view ?? 'side';
+  const poses = demo.keys.map((k, i) => keyPose(demo, i));
+  const cyc = cycleSeconds(demo);
+  if (cyc > 0) for (let i = 0; i < 48; i++) poses.push(poseAt(demo, (cyc * i) / 48));
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minY = Infinity;
+  for (const pose of poses) {
+    const { joints } = solvePose(pose, demo);
+    for (const [name, p] of Object.entries(joints)) {
+      const r = SURFACE[name] ?? 9;
+      minX = Math.min(minX, p[0] - r);
+      maxX = Math.max(maxX, p[0] + r);
+      minY = Math.min(minY, p[1] - r);
+    }
+  }
+  const fig = { figMinX: minX, figMaxX: maxX, top: minY };
   for (const prop of demo.props ?? []) {
     if (prop.type === 'wall') {
-      const x = prop.x ?? 170;
-      const rightSide = (prop.side ?? (x > SIZE / 2 ? 'right' : 'left')) === 'right';
-      const wx = rightSide ? x : x - 14;
-      el('rect', { x: wx, y: 18, width: 14, height: GROUND_Y - 18, rx: 2, class: 'fig-prop' }, g);
-      for (let y = 30; y < GROUND_Y - 6; y += 16) {
+      const wx = wallLeft(prop);
+      minX = Math.min(minX, wx - 2);
+      maxX = Math.max(maxX, wx + 16);
+    } else if (prop.type === 'chair') {
+      const x = prop.x ?? 150;
+      const seatY = GROUND_Y - (prop.seat ?? 44);
+      minX = Math.min(minX, x - 26);
+      maxX = Math.max(maxX, x + 26);
+      minY = Math.min(minY, seatY - 46);
+    }
+  }
+  const pad = 9;
+  let x = minX - pad;
+  let y = minY - pad;
+  let w = maxX + pad - x;
+  let h = GROUND_Y + 8 - y;
+  const MIN = 100;
+  if (w < MIN) {
+    x -= (MIN - w) / 2;
+    w = MIN;
+  }
+  if (h < MIN) {
+    y -= MIN - h;
+    h = MIN;
+  }
+  const frame = { x, y, w, h, ...fig };
+  frameCache.set(demo, frame);
+  return frame;
+}
+
+const SCENE_FRAME = Object.freeze({ x: 0, y: 0, w: SIZE, h: SIZE, figMinX: 18, figMaxX: 182, top: 18 });
+
+function drawProps(g, demo, frame) {
+  for (const prop of demo.props ?? []) {
+    if (prop.type === 'wall') {
+      const wx = wallLeft(prop);
+      const top = Math.min(18, frame.y - 30);
+      el('rect', { x: wx, y: top, width: 14, height: GROUND_Y - top, rx: 2, class: 'fig-prop' }, g);
+      for (let y = top + 12; y < GROUND_Y - 6; y += 16) {
         el('line', { x1: wx + 3, y1: y, x2: wx + 11, y2: y + 6, class: 'fig-prop-mark' }, g);
       }
     } else if (prop.type === 'chair') {
@@ -266,20 +341,25 @@ function drawProps(g, demo) {
         class: 'fig-prop-line',
       }, g);
     } else if (prop.type === 'mat') {
-      const x1 = prop.x1 ?? 18;
-      const x2 = prop.x2 ?? 182;
+      // The mat follows the body's reach so it never forces a wider frame.
+      const x1 = frame.figMinX - 8;
+      const x2 = frame.figMaxX + 8;
       el('rect', { x: x1, y: GROUND_Y - 1.5, width: x2 - x1, height: 5, rx: 2.5, class: 'fig-mat' }, g);
     }
   }
 }
 
-/** Build the static SVG skeleton for a demo. Returns { svg, update(solved) }. */
-export function buildFigureSVG(demo, { label = '', className = '' } = {}) {
+/**
+ * Build the static SVG skeleton for a demo. Returns { svg, update(solved) }.
+ * `frame: 'auto'` (default) zooms to the demo's own motion; `'scene'` shows the fixed 200 x 200 scene.
+ */
+export function buildFigureSVG(demo, { label = '', className = '', frame: framing = 'auto' } = {}) {
   const view = demo.view ?? 'side';
   const front = view === 'front';
   const focus = focusSet(demo);
+  const frame = framing === 'scene' || !demo.keys?.length ? SCENE_FRAME : demoFrame(demo);
   const svg = el('svg', {
-    viewBox: `0 0 ${SIZE} ${SIZE}`,
+    viewBox: [frame.x, frame.y, frame.w, frame.h].map((v) => +v.toFixed(2)).join(' '),
     class: `fig fig-${view}${className ? ' ' + className : ''}`,
     role: 'img',
     'aria-label': label,
@@ -287,14 +367,17 @@ export function buildFigureSVG(demo, { label = '', className = '' } = {}) {
   });
   if (label) el('title', {}, svg).textContent = label;
   const props = el('g', { class: 'fig-props' }, svg);
-  drawProps(props, demo);
+  drawProps(props, demo, frame);
   const shadow = el('ellipse', { class: 'fig-shadow', cx: 100, cy: GROUND_Y + 1, rx: 40, ry: 3.5 }, svg);
-  el('line', { class: 'fig-ground', x1: 6, y1: GROUND_Y + 0.5, x2: SIZE - 6, y2: GROUND_Y + 0.5 }, svg);
+  // The floor runs past the frame so it spans whatever box the figure is shown in (.fig-wrap clips it).
+  const groundX1 = framing === 'scene' ? 6 : frame.x - frame.w * 3;
+  const groundX2 = framing === 'scene' ? SIZE - 6 : frame.x + frame.w * 4;
+  el('line', { class: 'fig-ground', x1: +groundX1.toFixed(1), y1: GROUND_Y + 0.5, x2: +groundX2.toFixed(1), y2: GROUND_Y + 0.5 }, svg);
   const body = el('g', { class: 'fig-body' }, svg);
 
   const tone = (part, far) => {
     const f = focus.has(part);
-    if (far && !front) return f ? 'fig-focus-far' : 'fig-far';
+    if (far && (!front || demo.depth)) return f ? 'fig-focus-far' : 'fig-far';
     return f ? 'fig-focus' : 'fig-near';
   };
   const seg = (part, far, width) =>
@@ -482,14 +565,14 @@ export function createKeyStrip(demo, { label = '', className = '' } = {}) {
   strip.setAttribute('role', 'img');
   strip.setAttribute('aria-label', label);
   const view = demo.view ?? 'side';
-  const keys = demo.keys.filter((k) => !k.tween);
-  keys.forEach((key, i) => {
+  const keys = demo.keys.map((k, i) => ({ k, i })).filter(({ k }) => !k.tween);
+  keys.forEach(({ i: keyIndex }, i) => {
     const cell = document.createElement('div');
     cell.className = 'fig-step';
     const { svg, update } = buildFigureSVG(demo, {});
     svg.setAttribute('aria-hidden', 'true');
     svg.removeAttribute('role');
-    update(solvePose(normalizePose(key.pose, view), demo));
+    update(solvePose(keyPose(demo, keyIndex), demo));
     cell.appendChild(svg);
     if (keys.length > 1) {
       const n = document.createElement('span');

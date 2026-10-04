@@ -1,7 +1,7 @@
 // Renders key poses and tween samples for catalog demos, for visual authoring review.
 // Query: ?cat=lower|upper|core|cardio|all&ids=a,b&samples=6&alt=1
 import {
-  buildFigureSVG, solvePose, normalizePose, poseAt, cycleSeconds, contactGaps,
+  buildFigureSVG, solvePose, keyPose, poseAt, cycleSeconds, contactGaps,
 } from '../js/figure.js';
 
 const q = new URLSearchParams(location.search);
@@ -14,7 +14,7 @@ const report = [];
 function cell(demo, pose, caption, isKey, bad) {
   const c = document.createElement('div');
   c.className = 'cell' + (isKey ? ' key' : '');
-  const { svg, update } = buildFigureSVG(demo, {});
+  const { svg, update } = buildFigureSVG(demo, { frame: 'scene' });
   update(solvePose(pose, demo));
   c.appendChild(svg);
   const cap = document.createElement('div');
@@ -31,13 +31,13 @@ function renderDemo(title, sub, demo) {
   label.className = 'label';
   label.innerHTML = `${title}<small>${sub}</small>`;
   row.appendChild(label);
-  const view = demo.view ?? 'side';
   const entry = { title, keys: [] };
   demo.keys.forEach((k, i) => {
-    const pose = normalizePose(k.pose, view);
+    const pose = keyPose(demo, i);
     const solved = solvePose(pose, demo);
     const airborne = (pose.lift ?? 0) > 0;
-    const gaps = demo.contacts && !airborne ? contactGaps(solved, demo.contacts) : {};
+    const contacts = k.contacts ?? demo.contacts;
+    const gaps = contacts && !airborne ? contactGaps(solved, contacts) : {};
     const bad = Object.values(gaps).some((g) => Math.abs(g) > 3.5);
     const gapText = Object.entries(gaps).map(([n, g]) => `${n.replace(/^(near|far)/, (m) => m[0])}:${g}`).join(' ');
     entry.keys.push({ key: i + 1, gaps });
