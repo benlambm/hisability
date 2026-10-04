@@ -4,8 +4,9 @@
  *             The new worker then waits; js/pwa.js asks it to take over only after the user
  *             taps Refresh, so an update never swaps files under an active workout.
  * - activate: remove older his-ability-* caches (other sites on this origin are left alone).
- * - fetch:    same-origin GET only. Page navigations get the cached index.html; everything
- *             else is cache-first with a network fallback.
+ * - fetch:    same-origin GET inside the scope only. Opening the app gets the cached
+ *             index.html; other files are cache-first with a network fallback. Offline, an
+ *             unknown address inside the scope redirects to the app's root.
  *
  * CACHE_VERSION must equal APP_VERSION in js/config.js, and the ASSETS block is generated:
  * after changing any file, run `node tools/stamp-sw.mjs` (see README.md).
@@ -16,10 +17,11 @@ const CACHE_VERSION = '1.0.0';
 const CACHE_PREFIX = 'his-ability-';
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;
 const SHELL = 'index.html';
+const MATCH = { ignoreVary: true }; // one representation per URL; ignore Vary: Accept-Encoding
 
 const ASSETS = [
   /* ASSETS:START */
-  // fingerprint 8b03abc0be001bc6 (written by tools/stamp-sw.mjs; changes when any file below changes)
+  // fingerprint 06cffd923b515d89 (written by tools/stamp-sw.mjs; changes when any file below changes)
   './',
   'css/figure.css',
   'icons/apple-touch-icon.png',
@@ -113,7 +115,7 @@ async function navigate(request, url) {
     }
   }
   // A direct link to a cached file (an icon, the manifest) gets that file.
-  const file = await cache.match(request, { ignoreSearch: true });
+  const file = await cache.match(request, { ignoreSearch: true, ignoreVary: true });
   if (file) return file;
   try {
     return await fetch(request);
@@ -126,7 +128,7 @@ async function navigate(request, url) {
 /** Static files: cache-first, then network (successful responses are kept for next time). */
 async function asset(request) {
   const cache = await caches.open(CACHE_NAME);
-  const cached = await cache.match(request);
+  const cached = await cache.match(request, MATCH);
   if (cached) return cached;
   try {
     const response = await fetch(request);
@@ -140,7 +142,7 @@ async function asset(request) {
 }
 
 async function cachedShell(cache) {
-  return (await cache.match(SHELL)) || (await cache.match('./'));
+  return (await cache.match(SHELL, MATCH)) || (await cache.match('./', MATCH));
 }
 
 function offlinePage() {
