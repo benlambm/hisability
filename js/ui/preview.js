@@ -53,6 +53,7 @@ export function createPreview(dialog, handlers) {
     icon('close'),
   );
   const list = h('ol', { class: 'pv-list', 'aria-label': 'Movements in order' });
+  const title = h('h2', { class: 'sheet-title', id: 'preview-title', tabindex: '-1' }, 'Twelve movements, seven minutes');
   const scroller = h(
     'div',
     { class: 'sheet-scroll' },
@@ -186,7 +187,7 @@ export function createPreview(dialog, handlers) {
       render(workout, alternatives);
       if (!dialog.open) dialog.showModal();
       scroller.scrollTop = 0;
-      closeBtn.focus({ preventScroll: true });
+      title.focus({ preventScroll: true });
       document.documentElement.classList.add('has-sheet');
     },
     close() {
