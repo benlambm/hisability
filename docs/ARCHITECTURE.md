@@ -74,6 +74,8 @@ Each category file `export default [ ...movements ]` (8 to 10 movements, target 
   cue: 'Step back and lower until both knees bend.',     // primary form cue, <= 60 chars, imperative
   mistake: 'Letting the front knee drift inward.',       // common mistake, one short sentence
   caution: 'Shorten the step if your knees complain.',   // optional contraindication note, or omit
+  switchSides: false,           // optional: true for one-sided holds/moves (side plank, split squat);
+                                //   the player says "Switch sides" at the halfway point of the work
   description: 'Figure steps one foot back and lowers ...', // screen-reader description of the demo
   demo: { ... },                // see Demo schema
   alt: {                        // required lower-impact / easier alternative
@@ -213,7 +215,8 @@ moveIndex, move, nextMove, upcoming, resumeRemainingMs, activeMs, movesReached, 
 
 Events `{ type, snapshot, ... }`: `start`; `segment` (new segment entered, including via skip;
 fields `kind`, `moveIndex`, `move`, `nextMove`, `alternative`); `countdown` (`secondsLeft` 3, 2,
-1 inside the final three seconds of any segment); `pause`; `resume-countdown` (`secondsLeft`
+1 inside the final three seconds of any segment); `halfway` (work segments only, at the midpoint;
+fields `moveIndex`, `move`); `pause`; `resume-countdown` (`secondsLeft`
 3, 2, 1); `resume`; `skip`; `alternative` (`moveIndex`, `on`); `complete`; `end`. After a long gap
 (tab suspended) emit only the newest `segment` (and `complete` if reached); never a burst of stale
 countdowns.
@@ -230,7 +233,9 @@ export function createWakeLock() // -> { acquire(), release(), supported, active
 `unlock()` must be called synchronously inside the Start (and Resume) tap handler: it resumes the
 WebAudio context and primes `speechSynthesis` (required on iOS Safari). `handle(event)` turns
 session events into speech + short WebAudio tones + vibration patterns (distinct for work,
-transition, pause, completion). Spoken text uses `move.say ?? move.name`, or the alternative's name
+transition, pause, completion). On `halfway`, if the active version (default or alt) has
+`switchSides` (alt inherits the movement's flag unless it sets its own), say "Switch sides".
+Spoken text uses `move.say ?? move.name`, or the alternative's name
 when `snapshot.alternatives[moveIndex]` is true. Audio and vibration are independent.
 
 ## js/pwa.js and js/install.js (PWA)
