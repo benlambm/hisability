@@ -49,8 +49,23 @@ export function hasLayer(name) {
 }
 
 export function initHistory() {
-  // A reload must not inherit layer entries from the previous page session.
-  if (history.state?.hbLayer) history.replaceState(null, '');
+  // A reload must not inherit layer entries from the previous page session: clear the stale
+  // entry and step back to the base one, so a single Back still leaves the app.
+  const stale = history.state?.hbLayer ? Number(history.state.depth) || 0 : 0;
+  if (history.state?.hbLayer) {
+    try {
+      history.replaceState(null, '');
+      if (stale > 0) {
+        ignorePops += 1;
+        history.go(-stale);
+        setTimeout(() => {
+          ignorePops = 0;
+        }, 1000);
+      }
+    } catch {
+      ignorePops = 0;
+    }
+  }
   window.addEventListener('popstate', () => {
     if (ignorePops > 0) {
       ignorePops -= 1;

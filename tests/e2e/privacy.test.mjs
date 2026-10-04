@@ -129,7 +129,7 @@ test('criteria 9, 10: a whole session makes no date, calendar, storage, permissi
     assert.equal(store.cookie, '', 'no cookies');
     assert.deepEqual(store.idb, [], 'no IndexedDB databases');
     assert.ok(store.caches.length >= 1, 'the offline cache exists');
-    for (const name of store.caches) assert.match(name, /^his-ability-\d+\.\d+\.\d+$/, `cache ${name} is the app's versioned cache`);
+    for (const name of store.caches) assert.match(name, /^his-ability-\d+\.\d+\.\d+(-[0-9a-f]+)?$/, `cache ${name} is the app's versioned cache`);
     const state = await context.storageState({ indexedDB: true });
     assert.deepEqual(state.cookies, [], 'browser profile has no cookies');
     assert.deepEqual(state.origins, [], 'browser profile has no localStorage or IndexedDB for any origin');
@@ -160,7 +160,7 @@ test('criteria 9, 10: a whole session makes no date, calendar, storage, permissi
   }
 });
 
-test('criterion 9, Requirement 21: an app switch keeps an active workout on time; leaving after a workout shows a fresh one', async () => {
+test('criterion 9, Requirement 21: an app switch keeps an active workout on time; leaving after a completed workout shows a fresh one', async () => {
   const { context, page, errors } = await openApp(browser, server.url, { paused: true });
   try {
     const names = await homeNames(page);
@@ -188,7 +188,7 @@ test('criterion 9, Requirement 21: an app switch keeps an active workout on time
     assert.notDeepEqual(fresh, names, 'a new workout replaces the one just used');
     await waitFor(() => page.evaluate(() => history.state?.hbLayer === undefined), { message: 'the finish layer to leave history' });
 
-    // Ended early, then left: also fresh.
+    // Ended early, then left: the unfinished workout stays until Shuffle or reload (Requirement 2).
     await page.click(START);
     await page.clock.fastForward(20_000);
     await page.click('#screen-player [data-action="end"]');
@@ -196,7 +196,7 @@ test('criterion 9, Requirement 21: an app switch keeps an active workout on time
     assert.deepEqual(await homeNames(page), fresh, 'End keeps the workout while the app stays open');
     await setVisibility(page, 'hidden');
     await setVisibility(page, 'visible');
-    assert.notDeepEqual(await homeNames(page), fresh, 'leaving after ending sets up a new workout');
+    assert.deepEqual(await homeNames(page), fresh, 'an unfinished workout survives an app switch');
     assert.equal(await screenName(page), 'home');
     assert.deepEqual(errors, []);
   } finally {
@@ -204,26 +204,45 @@ test('criterion 9, Requirement 21: an app switch keeps an active workout on time
   }
 });
 
-test('Requirements 29, 54: after a reload, browser history keeps no trace of the finished workout (and Back leaves the app)', async () => {
+/** about:blank, then the app, a workout skipped to the finish screen, then a reload. */
+async function reloadOnFinish() {
   const context = await browser.newContext(PHONE);
   const page = await context.newPage();
-  try {
-    await page.goto('about:blank');
-    await page.goto(server.url);
-    await page.waitForSelector('#screen-home .move-row');
-    await page.click(START);
-    for (let i = 0; i < 30 && (await screenName(page)) === 'player'; i++) await page.click('#screen-player .ctl-skip');
-    assert.equal(await screenName(page), 'finish');
+  await page.goto('about:blank');
+  await page.goto(server.url);
+  await page.waitForSelector('#screen-home .move-row');
+  await page.click(START);
+  for (let i = 0; i < 30 && (await screenName(page)) === 'player'; i++) await page.click('#screen-player .ctl-skip');
+  assert.equal(await screenName(page), 'finish');
+  await page.reload();
+  await page.waitForSelector('#screen-home .move-row');
+  return { context, page };
+}
 
-    await page.reload();
-    await page.waitForSelector('#screen-home .move-row');
+test('Requirements 29, 54: after a reload on the finish screen, history.state keeps no trace of the finished workout', async () => {
+  const { context, page } = await reloadOnFinish();
+  try {
     const leftover = await page.evaluate(() => history.state);
     assert.equal(leftover?.hbLayer, undefined, `history.state after reload should be empty, found ${JSON.stringify(leftover)}`);
+  } finally {
+    await context.close();
+  }
+});
 
-    // A single Back from the fresh home screen should leave the app, not consume a stale entry.
+test('Back after a reload on the finish screen: a single Back leaves the app (no stale same-URL history entry)', async () => {
+  const { context, page } = await reloadOnFinish();
+  try {
+    await page.evaluate(() => {
+      window.__sameDocument = true;
+    });
     await page.goBack({ timeout: 5_000 }).catch(() => {});
     await page.waitForTimeout(300);
-    assert.equal(page.url(), 'about:blank', 'one Back press leaves the app after a reload');
+    const stayed = page.url() === 'about:blank' ? null : await page.evaluate(() => ({ same: window.__sameDocument === true, screen: document.body.dataset.screen }));
+    assert.equal(
+      page.url(),
+      'about:blank',
+      `one Back press should leave the app; instead it stayed on ${page.url()} (${JSON.stringify(stayed)}): a dead Back press`,
+    );
   } finally {
     await context.close();
   }

@@ -206,6 +206,7 @@ test('criterion 8: Skip from prep, work, transition (also while paused) and from
     assert.equal(fin.screen, 'finish', 'skipping the final movement finishes the workout');
     const secs = Math.round(active / 1000);
     assert.deepEqual(fin.stats, [`0:${String(secs).padStart(2, '0')}`, '12 of 12'], 'summary counts only time actually spent moving');
+    assert.doesNotMatch(fin.message, /seven minutes|start to finish|complete session|every movement/i, `an honest message after skipping: "${fin.message}"`);
     assert.deepEqual(errors, []);
   } finally {
     await context.close();

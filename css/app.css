@@ -1263,7 +1263,7 @@ dialog::backdrop {
   z-index: 40;
   left: 0;
   right: 0;
-  top: calc(var(--safe-t) + 12px);
+  top: calc(var(--safe-t) + 112px);
   display: grid;
   justify-items: center;
   gap: 8px;
@@ -1288,6 +1288,11 @@ body[data-screen="player"] .toasts {
   box-shadow: var(--shadow-pop);
   pointer-events: auto;
   animation: toast-in 0.28s var(--ease);
+}
+
+/* Passive toasts never block taps on what is underneath. */
+.toast:not(:has(.toast-btn)) {
+  pointer-events: none;
 }
 
 .toast.is-leaving {
