@@ -109,14 +109,14 @@ const PLANK = {
 const WALL_IN = {
   torso: 45, head: 55,
   nearArm: [100, 94], farArm: [100, 94],
-  nearLeg: [112, 206], nearFoot: 150, // stands on far foot, near knee drives up
-  farLeg: [210, 213], farFoot: 112,
+  nearLeg: [112, 216], nearFoot: 150, // stands on far foot, near knee drives up
+  farLeg: [202, 206], farFoot: 112,
 };
 const WALL_PASS = {
   torso: 45, head: 55,
   nearArm: [100, 94], farArm: [100, 94],
-  nearLeg: [210, 213], nearFoot: 112,
-  farLeg: [210, 213], farFoot: 112,
+  nearLeg: [202, 206], nearFoot: 112,
+  farLeg: [202, 206], farFoot: 112,
 };
 
 // ---- Skaters (front view). Landing on the near (screen-right) leg, far leg crossed behind.
