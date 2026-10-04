@@ -39,7 +39,7 @@ export function createFinish(root, handlers) {
         'dl',
         { class: 'fin-stats', 'aria-label': 'This session' },
         h('div', { class: 'fin-stat' }, h('dt', null, 'Active time'), h('dd', null, duration)),
-        h('div', { class: 'fin-stat' }, h('dt', null, 'Movements'), h('dd', null, moves, h('span', { class: 'fin-stat-unit' }, ' movements'))),
+        h('div', { class: 'fin-stat' }, h('dt', null, 'Movements'), h('dd', null, moves)),
       ),
       h('div', { class: 'fin-actions' }, doneBtn, anotherBtn),
       h('p', { class: 'fin-motto' }, MOTTO),

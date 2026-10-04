@@ -62,8 +62,7 @@ export function createPreview(dialog, handlers) {
       h(
         'div',
         { class: 'pv-intro' },
-        h('p', { class: 'eyebrow' }, 'Preview'),
-        h('h2', { class: 'sheet-title', id: 'preview-title' }, 'Twelve movements, seven minutes'),
+        title,
         h('p', { class: 'pv-timing' }, TIMING_SENTENCE),
         timelineStrip(),
       ),
@@ -142,19 +141,23 @@ export function createPreview(dialog, handlers) {
     it.li = h(
       'li',
       { class: 'pv-item', dataset: { cat: move.category, index: String(i) } },
-      it.stage,
       h(
         'div',
-        { class: 'pv-body' },
+        { class: 'pv-head' },
         h(
           'p',
           { class: 'pv-meta' },
           h('span', { class: 'pv-num tnum' }, String(i + 1).padStart(2, '0')),
           h('span', { class: 'pv-cat' }, h('span', { class: 'cat-dot', 'aria-hidden': 'true' }), CATEGORY_LABELS[move.category] ?? move.category),
-          it.easierTag,
         ),
         it.name,
+        it.easierTag,
         it.cue,
+      ),
+      it.stage,
+      h(
+        'div',
+        { class: 'pv-more' },
         it.sides,
         move.caution ? h('p', { class: 'pv-caution' }, move.caution) : null,
         h('p', { class: 'pv-alt', id: `pv-alt-${i}` }, it.altLabel, it.altText),

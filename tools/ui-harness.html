@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>His Ability UI harness</title>
+<meta name="theme-color" content="#FAF9F5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#211A1E" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="../css/figure.css">
+<link rel="stylesheet" href="../css/app.css">
+<script type="module" src="ui-harness.js"></script>
+</head>
+<body data-screen="home">
+<!-- Same skeleton as index.html; screens are filled by the UI modules with fixture data.
+     ?screen=home|preview|player-prep|player-work|player-rest|player-paused|player-resuming|finish|about|dialog
+     Extra: &alt=1 &final=1 &install=ios|android|android-prompt|desktop &offline=failed &error=1
+            &toast=update|offline|wake &vib=0 &move=<index> &scroll=<px> -->
+<main id="main" class="app">
+  <section id="screen-home" class="screen screen-home" aria-labelledby="home-title"></section>
+  <section id="screen-player" class="screen screen-player" hidden></section>
+  <section id="screen-finish" class="screen screen-finish" aria-labelledby="finish-title" hidden></section>
+</main>
+<dialog id="preview-sheet" class="sheet sheet-full" aria-labelledby="preview-title"></dialog>
+<dialog id="about-sheet" class="sheet sheet-modal" aria-labelledby="about-title"></dialog>
+<dialog id="end-dialog" class="confirm" aria-labelledby="end-title" aria-describedby="end-desc"></dialog>
+<div id="toasts" class="toasts"></div>
+<div id="announcer" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>

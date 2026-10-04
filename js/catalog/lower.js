@@ -71,9 +71,9 @@ export default [
       contacts: ['nearToe', 'farToe'],
       keys: [
         { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [149.1, 160.3], farLeg: [210.9, 199.7], nearFoot: 112 }, dur: 0.65, hold: 0.25, ease: 'in' },
-        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [121.4, 181.2], farLeg: [238.6, 178.8], nearFoot: 112 }, dur: 0.65, hold: 0, ease: 'out', tween: true },
-        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [104.4, 188.2], farLeg: [255.6, 171.8], nearFoot: 112 }, dur: 0.5, hold: 0.2, ease: 'in' },
-        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [121.4, 181.2], farLeg: [238.6, 178.8], nearFoot: 112 }, dur: 0.5, hold: 0, ease: 'out', tween: true },
+        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [118.9, 182.6], farLeg: [241.1, 177.4], nearFoot: 112 }, dur: 0.65, hold: 0, ease: 'out', tween: true },
+        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [100, 189.2], farLeg: [260, 170.8], nearFoot: 112 }, dur: 0.5, hold: 0.2, ease: 'in' },
+        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [118.9, 182.6], farLeg: [241.1, 177.4], nearFoot: 112 }, dur: 0.5, hold: 0, ease: 'out', tween: true },
       ],
     },
     alt: {
@@ -118,9 +118,9 @@ export default [
       contacts: ['farToe'],
       keys: [
         { pose: { torso: 0, nearArm: [222, 127] }, dur: 0.55, hold: 0.15, ease: 'in' },
-        { pose: { torso: 4, nearArm: [226, 131], nearLeg: [179, 224.2], farLeg: [150, 184], nearFoot: 112, farFoot: 100, dx: -42 }, dur: 0.55, hold: 0, ease: 'out', tween: true },
+        { pose: { torso: 4, nearArm: [226, 131], nearLeg: [184.4, 234.5], farLeg: [132, 180], nearFoot: 103, farFoot: 100, dx: -62.1 }, dur: 0.55, hold: 0, ease: 'out', tween: true },
         { pose: { torso: 8, nearArm: [230, 135], nearLeg: [187.7, 272.5], farLeg: [100, 193], nearFoot: 128, farFoot: 100, dx: -72.3 }, dur: 0.55, hold: 0.2, ease: 'in' },
-        { pose: { torso: 4, nearArm: [226, 131], nearLeg: [179, 224.2], farLeg: [150, 184], nearFoot: 112, farFoot: 100, dx: -42 }, dur: 0.5, hold: 0, ease: 'out', tween: true },
+        { pose: { torso: 4, nearArm: [226, 131], nearLeg: [184.4, 234.5], farLeg: [132, 180], nearFoot: 103, farFoot: 100, dx: -62.1 }, dur: 0.5, hold: 0, ease: 'out', tween: true },
         { pose: { torso: 0, nearArm: [222, 127] }, dur: 1.1, hold: 0.15 },
         { pose: { torso: 8, nearArm: [230, 135], nearLeg: [100, 193], farLeg: [187.7, 272.5], farFoot: 128 }, dur: 1.05, hold: 0.2 },
       ],
@@ -134,14 +134,14 @@ export default [
       demo: {
         view: 'side',
         anchor: { joint: 'nearAnkle', x: 118 },
-        props: [{ type: 'wall', x: 146, side: 'right' }],
+        props: [{ type: 'wall', x: 149, side: 'right' }],
         focus: ['legs'],
         contacts: ['nearToe', 'nearAnkle', 'farToe'],
         keys: [
-          { pose: { torso: 2, nearArm: [126.7, 72.1], farArm: [126.7, 72.1], nearLeg: [148.3, 174.6], farLeg: [195.8, 223.9], farFoot: 128 }, dur: 0.55, hold: 0.2, ease: 'in' },
-          { pose: { torso: 3, nearArm: [121.5, 63.5], farArm: [121.5, 63.5], nearLeg: [135.1, 184.3], farLeg: [186.4, 237.4], farFoot: 128 }, dur: 0.55, hold: 0, ease: 'out', tween: true },
-          { pose: { torso: 4, nearArm: [114.6, 56.4], farArm: [114.6, 56.4], nearLeg: [125.3, 189.8], farLeg: [180.8, 247.4], farFoot: 128 }, dur: 0.45, hold: 0.2, ease: 'in' },
-          { pose: { torso: 3, nearArm: [121.5, 63.5], farArm: [121.5, 63.5], nearLeg: [135.1, 184.3], farLeg: [186.4, 237.4], farFoot: 128 }, dur: 0.45, hold: 0, ease: 'out', tween: true },
+          { pose: { torso: 2, nearArm: [113.2, 70.9], farArm: [113.2, 70.9], nearLeg: [148.3, 174.6], farLeg: [195.8, 223.9], farFoot: 128 }, dur: 0.55, hold: 0.2, ease: 'in' },
+          { pose: { torso: 3, nearArm: [106.7, 64.3], farArm: [106.7, 64.3], nearLeg: [135.1, 184.3], farLeg: [186.4, 237.4], farFoot: 128 }, dur: 0.55, hold: 0, ease: 'out', tween: true },
+          { pose: { torso: 4, nearArm: [98.3, 60], farArm: [98.3, 60], nearLeg: [125.3, 189.8], farLeg: [180.8, 247.4], farFoot: 128 }, dur: 0.45, hold: 0.2, ease: 'in' },
+          { pose: { torso: 3, nearArm: [106.7, 64.3], farArm: [106.7, 64.3], nearLeg: [135.1, 184.3], farLeg: [186.4, 237.4], farFoot: 128 }, dur: 0.45, hold: 0, ease: 'out', tween: true },
         ],
       },
     },
@@ -169,10 +169,10 @@ export default [
       focus: ['legs'],
       contacts: ['nearToe', 'nearAnkle', 'farToe'],
       keys: [
-        { pose: { torso: 3, nearArm: [225, 130], nearLeg: [143.4, 172.6], farLeg: [198.9, 227.6], farFoot: 130 }, dur: 0.65, hold: 0.2, ease: 'in' },
-        { pose: { torso: 5.5, nearArm: [227.5, 132.5], nearLeg: [120.3, 188], farLeg: [186.2, 252], farFoot: 130 }, dur: 0.65, hold: 0, ease: 'out', tween: true },
+        { pose: { torso: 3, nearArm: [225, 130], nearLeg: [147.8, 168.7], farLeg: [202.1, 223.1], farFoot: 130 }, dur: 0.65, hold: 0.2, ease: 'in' },
+        { pose: { torso: 5.5, nearArm: [227.5, 132.5], nearLeg: [121.4, 187.4], farLeg: [186.6, 250.9], farFoot: 130 }, dur: 0.65, hold: 0, ease: 'out', tween: true },
         { pose: { torso: 8, nearArm: [230, 135], nearLeg: [103, 194], farLeg: [182.8, 270.7], farFoot: 130 }, dur: 0.5, hold: 0.2, ease: 'in' },
-        { pose: { torso: 5.5, nearArm: [227.5, 132.5], nearLeg: [120.3, 188], farLeg: [186.2, 252], farFoot: 130 }, dur: 0.5, hold: 0, ease: 'out', tween: true },
+        { pose: { torso: 5.5, nearArm: [227.5, 132.5], nearLeg: [121.4, 187.4], farLeg: [186.6, 250.9], farFoot: 130 }, dur: 0.5, hold: 0, ease: 'out', tween: true },
       ],
     },
     alt: {
@@ -217,9 +217,9 @@ export default [
       contacts: ['nearToe', 'farToe'],
       keys: [
         { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [140.9, 151.1], farLeg: [219.1, 208.9] }, dur: 1, hold: 0.15 },
-        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [114, 187.9], farLeg: [231, 220.8] }, dur: 1, hold: 0.2 },
+        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [107.5, 198.4], farLeg: [236.8, 226.6] }, dur: 1, hold: 0.2 },
         { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [140.9, 151.1], farLeg: [219.1, 208.9] }, dur: 1, hold: 0.15 },
-        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [129, 139.2], farLeg: [246, 172.1] }, dur: 1, hold: 0.2 },
+        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [123.2, 133.4], farLeg: [252.5, 161.6] }, dur: 1, hold: 0.2 },
       ],
     },
     alt: {
@@ -263,8 +263,8 @@ export default [
       focus: ['glutes', 'back'],
       contacts: ['nearToe', 'nearAnkle'],
       keys: [
-        { pose: { torso: 0, nearArm: [147, 350], farArm: [144, 347], nearLeg: [177, 183] }, dur: 1.4, hold: 0.2 },
-        { pose: { torso: 72, nearArm: [219, 422], farArm: [216, 419], nearLeg: [160, 186] }, dur: 1.1, hold: 0.2 },
+        { pose: { torso: 0, nearArm: [160, 345], farArm: [157, 342], nearLeg: [177, 183] }, dur: 1.4, hold: 0.2 },
+        { pose: { torso: 72, nearArm: [232, 417], farArm: [229, 414], nearLeg: [160, 186] }, dur: 1.1, hold: 0.2 },
       ],
     },
     alt: {
@@ -405,13 +405,13 @@ export default [
       description: 'Side view. Facing a wall with hands resting on it, the figure lifts both heels and lowers them slowly.',
       demo: {
         view: 'side',
-        anchor: { joint: 'nearToe', x: 100 },
-        props: [{ type: 'wall', x: 136, side: 'right' }],
+        anchor: { joint: 'nearToe', x: 98 },
+        props: [{ type: 'wall', x: 138, side: 'right' }],
         focus: ['calves'],
         contacts: ['nearToe'],
         keys: [
-          { pose: { torso: 0, nearArm: [126.7, 62.4], farArm: [126.7, 62.4], nearFoot: 100 }, dur: 0.9, hold: 0.2 },
-          { pose: { torso: 0, nearArm: [147, 68.1], farArm: [147, 68.1], nearFoot: 148 }, dur: 1.1, hold: 0.35 },
+          { pose: { torso: 0, nearArm: [118.8, 75], farArm: [118.8, 75], nearFoot: 100 }, dur: 0.9, hold: 0.2 },
+          { pose: { torso: 0, nearArm: [139.7, 77.8], farArm: [139.7, 77.8], nearFoot: 148 }, dur: 1.1, hold: 0.35 },
         ],
       },
     },

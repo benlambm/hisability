@@ -118,7 +118,7 @@ const SKATE_LAND = {
   nearLeg: [166, 194], nearFoot: 105,
   farLeg: [150, 160], farFoot: -120,
   nearArm: [138, 150], farArm: [128, 102],
-  dx: 32,
+  dx: 29,
 };
 const SKATE_AIR = {
   torso: 0, head: 0,
@@ -144,10 +144,10 @@ const SKATE_WIDE = {
 
 // ---- Burpees (side view, hands pinned at x 150; standing keys use dx to keep the feet in place).
 const CROUCH = {
-  torso: 70, head: 78,
-  nearArm: [167, 167], farArm: [167, 167],
-  nearLeg: [90, 211], nearFoot: 112,
-  farLeg: [90, 211], farFoot: 112,
+  torso: 62, head: 72,
+  nearArm: [173, 173], farArm: [173, 173],
+  nearLeg: [98, 234], nearFoot: 111,
+  farLeg: [98, 234], farFoot: 111,
 };
 const KICK_BACK = {
   torso: 105, head: 100,
@@ -160,6 +160,35 @@ const ONE_BACK = {
   nearArm: [172, 172], farArm: [172, 172],
   nearLeg: [248, 248], nearFoot: 170,
   farLeg: [98, 215], farFoot: 115,
+};
+
+// Step-back burpee (side view, far toes pinned). Tuned so the hands stay planted while each foot
+// steps: the hips stay high enough for the stepping leg to pass under them.
+const SB_DOWN = {
+  torso: 124, head: 125,
+  nearArm: [162, 162], farArm: [162, 162],
+  nearLeg: [185, 225], nearFoot: 140,
+  farLeg: [185, 225], farFoot: 140,
+};
+const SB_ONE_BACK = {
+  torso: 102, head: 100,
+  nearArm: [176, 176], farArm: [176, 176],
+  nearLeg: [230, 230], nearFoot: 171, // near foot stepped back
+  farLeg: [200, 232], farFoot: 96,
+};
+const SB_PLANK = {
+  torso: 82, head: 80,
+  nearArm: [186, 186], farArm: [186, 186],
+  nearLeg: [244, 244], nearFoot: 170,
+  farLeg: [244, 244], farFoot: 170,
+  dx: -27,
+};
+const SB_ONE_IN = {
+  torso: 103, head: 100,
+  nearArm: [180, 180], farArm: [180, 180],
+  nearLeg: [200, 239], nearFoot: 118, // near foot stepped back in
+  farLeg: [230, 230], farFoot: 178,
+  dx: -25,
 };
 
 // ---- Inchworm (side view, toes pinned).
@@ -349,7 +378,7 @@ export default [
       keys: [
         { pose: { torso: 35, head: 25, nearArm: [215, 205], nearLeg: [100, 205] }, dur: 0.2, hold: 0.08, ease: 'in' },
         { pose: { torso: 10, nearArm: [95, 80], nearLeg: [165, 190], nearFoot: 130 }, dur: 0.12, hold: 0, ease: 'out' },
-        { pose: { torso: 2, nearArm: [35, 25], nearLeg: [180, 182], nearFoot: 150, lift: 10 }, dur: 0.22, hold: 0.03, ease: 'in' },
+        { pose: { torso: 2, nearArm: [45, 32], nearLeg: [180, 182], nearFoot: 138, lift: 8 }, dur: 0.22, hold: 0.03, ease: 'in' },
         { pose: { torso: 22, nearArm: [120, 100], nearLeg: [140, 205] }, dur: 0.3, hold: 0 },
       ],
     },
@@ -366,7 +395,7 @@ export default [
         contacts: ['nearToe'],
         keys: [
           { pose: { torso: 32, nearArm: [92, 90], nearLeg: [100, 202] }, dur: 0.9, hold: 0.2 },
-          { pose: { torso: 0, nearArm: [30, 22], nearLeg: [180, 180], nearFoot: 145 }, dur: 0.9, hold: 0.3 },
+          { pose: { torso: 0, nearArm: [40, 30], nearLeg: [180, 180], nearFoot: 145 }, dur: 0.9, hold: 0.3 },
         ],
       },
     },
@@ -446,7 +475,7 @@ export default [
         { pose: PLANK, dur: 0.22, hold: 0.15, ease: 'in' },
         { pose: KICK_BACK, dur: 0.2, hold: 0, ease: 'out' },
         { pose: CROUCH, dur: 0.4, hold: 0.06 },
-        { pose: { torso: 2, nearArm: [30, 22], nearLeg: [180, 182], nearFoot: 150, lift: 10, dx: 0 }, dur: 0.45, hold: 0.04 },
+        { pose: { torso: 2, nearArm: [45, 32], nearLeg: [180, 182], nearFoot: 138, lift: 8, dx: -22 }, dur: 0.45, hold: 0.04 },
       ],
     },
     alt: {
@@ -457,16 +486,16 @@ export default [
         'Figure squats with the hands on the floor, steps one foot at a time back to a plank, steps back in, and stands tall reaching up.',
       demo: {
         view: 'side',
-        anchor: { joint: 'nearHand', x: 150 },
+        anchor: { joint: 'farToe', x: 62 },
         focus: ['full'],
         contacts: ['nearToe', 'farToe'],
         keys: [
-          { pose: { torso: 2, nearArm: [22, 14], nearLeg: [180, 180], dx: -17 }, dur: 0.7, hold: 0.25 },
-          { pose: CROUCH, dur: 0.55, hold: 0.1 },
-          { pose: ONE_BACK, dur: 0.55, hold: 0.1 },
-          { pose: PLANK, dur: 0.55, hold: 0.25 },
-          { pose: swap(ONE_BACK), dur: 0.55, hold: 0.1 },
-          { pose: CROUCH, dur: 0.7, hold: 0.1 },
+          { pose: { torso: 2, nearArm: [22, 14], nearLeg: [180, 180] }, dur: 0.7, hold: 0.25 },
+          { pose: SB_DOWN, dur: 0.55, hold: 0.1 },
+          { pose: SB_ONE_BACK, dur: 0.55, hold: 0.1 },
+          { pose: SB_PLANK, dur: 0.55, hold: 0.25 },
+          { pose: SB_ONE_IN, dur: 0.55, hold: 0.1 },
+          { pose: SB_DOWN, dur: 0.7, hold: 0.1 },
         ],
       },
     },
@@ -541,9 +570,9 @@ export default [
       contacts: ['nearToe', 'farToe'],
       keys: [
         { pose: { torso: 8, nearArm: [88, 90], farArm: [150, 30], nearLeg: [169, 187], farLeg: [205, 210], farFoot: 140 }, dur: 0.22, hold: 0.04 },
-        { pose: { torso: 6, nearArm: [150, 30], farArm: [160, 40], nearLeg: [166, 192], farLeg: [203, 212], farFoot: 140 }, dur: 0.22, hold: 0.02 },
+        { pose: { torso: 6, nearArm: [150, 30], farArm: [160, 40], nearLeg: [163, 194], farLeg: [198, 220], farFoot: 140 }, dur: 0.22, hold: 0.02 },
         { pose: { torso: 10, nearArm: [150, 30], farArm: [86, 88], nearLeg: [169, 187], farLeg: [205, 210], farFoot: 140 }, dur: 0.22, hold: 0.04 },
-        { pose: { torso: 6, nearArm: [150, 30], farArm: [160, 40], nearLeg: [166, 192], farLeg: [203, 212], farFoot: 140 }, dur: 0.22, hold: 0.02 },
+        { pose: { torso: 6, nearArm: [150, 30], farArm: [160, 40], nearLeg: [163, 194], farLeg: [198, 220], farFoot: 140 }, dur: 0.22, hold: 0.02 },
       ],
     },
     alt: {
@@ -559,9 +588,9 @@ export default [
         contacts: ['nearToe', 'farToe'],
         keys: [
           { pose: { torso: 3, nearArm: [150, 30], farArm: [160, 40], nearLeg: [172, 186], farLeg: [188, 192] }, dur: 0.6, hold: 0.15 },
-          { pose: { torso: 8, nearArm: [88, 90], farArm: [160, 40], nearLeg: [160, 190], farLeg: [205, 210], farFoot: 140 }, dur: 0.6, hold: 0.2 },
+          { pose: { torso: 8, nearArm: [88, 90], farArm: [160, 40], nearLeg: [169, 187], farLeg: [205, 210], farFoot: 140 }, dur: 0.6, hold: 0.2 },
           { pose: { torso: 3, nearArm: [150, 30], farArm: [160, 40], nearLeg: [172, 186], farLeg: [188, 192] }, dur: 0.6, hold: 0.15 },
-          { pose: { torso: 8, nearArm: [150, 30], farArm: [86, 88], nearLeg: [160, 190], farLeg: [205, 210], farFoot: 140 }, dur: 0.6, hold: 0.2 },
+          { pose: { torso: 8, nearArm: [150, 30], farArm: [86, 88], nearLeg: [169, 187], farLeg: [205, 210], farFoot: 140 }, dur: 0.6, hold: 0.2 },
         ],
       },
     },
