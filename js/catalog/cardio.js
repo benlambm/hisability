@@ -155,67 +155,85 @@ const SKATE_HOVER = {
   nearArm: [168, 174], farArm: [-172, -178],
 };
 
-// ---- Burpees (side view, hands pinned at x 150; the jump key uses dx to stay over the feet).
-// KICK_BACK is the mid-jump tuck: hips high, feet off the floor, so the hands stay planted.
+// ---- Burpees (side view). On the floor the hands are pinned (x 150); the jump pins the toes (x 124.8)
+// so the figure leaps straight up over its feet. TUCK is the mid-hop: hips high, feet kicked up, so the
+// feet clear the floor on the way back and in and the hands never lift.
 const CROUCH = {
   torso: 62, head: 72,
   nearArm: [173, 173], farArm: [173, 173],
   nearLeg: [98, 234], nearFoot: 111,
   farLeg: [98, 234], farFoot: 111,
 };
-const KICK_BACK = {
-  torso: 105, head: 100,
-  nearArm: [185, 185], farArm: [185, 185],
-  nearLeg: [175, 268], nearFoot: 172,
-  farLeg: [175, 268], farFoot: 172,
+const TUCK = {
+  torso: 105, head: 111,
+  nearArm: [180, 180], farArm: [180, 180],
+  nearLeg: [166.8, 286.9], nearFoot: 160,
+  farLeg: [166.8, 286.9], farFoot: 160,
 };
 
-// Step-back burpee (side view, far toes pinned). Tuned so the hands stay planted while each foot
-// steps: the hips stay high enough for the stepping leg to pass under them.
-const SB_DOWN = {
-  torso: 124, head: 125,
-  nearArm: [162, 162], farArm: [162, 162],
-  nearLeg: [185, 225], nearFoot: 140,
-  farLeg: [185, 225], farFoot: 140,
+// Step-back burpee (side view). Standing and bending down pin the planted foot; on the floor the hands
+// are pinned (x 134). Each step is a weight shift: one foot lands as the other lifts, so no foot skids.
+const SB_HANDS_DOWN = {
+  torso: 112, head: 112, // hinged down, hands on the floor
+  nearArm: [175.7, 153.2], farArm: [175.7, 153.2],
+  farLeg: [175.9, 235.3], farFoot: 125, // far foot still where it stood (x 62)
+  nearLeg: [178.7, 272.5], nearFoot: 145, // near foot lifting to step back
 };
 const SB_ONE_BACK = {
-  torso: 107, head: 102,
-  nearArm: [175, 175], farArm: [175, 175],
-  nearLeg: [225, 225], nearFoot: 177, // near foot stepped back
-  farLeg: [195, 230], farFoot: 114,
+  torso: 88, head: 88,
+  nearArm: [182, 159.4], farArm: [182, 159.4],
+  nearLeg: [226.4, 252.7], nearFoot: 160.3, // near foot planted back (x 22)
+  farLeg: [203.9, 294.8], farFoot: 168, // far foot on its way back
 };
 const SB_PLANK = {
-  torso: 81, head: 80,
-  nearArm: [189, 189], farArm: [189, 189],
-  nearLeg: [244, 244], nearFoot: 168,
-  farLeg: [244, 244], farFoot: 168,
-  dx: -27,
+  torso: 70.3, head: 70.3,
+  nearArm: [181.4, 172.7], farArm: [181.4, 172.7],
+  nearLeg: [248.2, 252.4], nearFoot: 160.3,
+  farLeg: [248.2, 252.4], farFoot: 160.3,
 };
 const SB_ONE_IN = {
-  torso: 101, head: 100,
-  nearArm: [181, 181], farArm: [181, 181],
-  nearLeg: [197, 239], nearFoot: 116, // near foot stepped back in
-  farLeg: [230, 230], farFoot: 180,
-  dx: -27,
+  torso: 88, head: 88,
+  nearArm: [182, 159.4], farArm: [182, 159.4],
+  farLeg: [226.4, 252.7], farFoot: 160.3, // far foot still back
+  nearLeg: [201.8, 295.8], nearFoot: 168, // near foot stepping in
 };
 
-// ---- Inchworm (side view, toes pinned).
-const FOLD = {
-  torso: 124, head: 140,
-  nearArm: [184, 180], farArm: [184, 180],
-  nearLeg: [179, 188], farLeg: [179, 188],
+// ---- Inchworm (side view, toes pinned at x 38). The hands walk in strides: in every key exactly one
+// hand bears weight (fold: x 67.8, plank: x 152.6) while the other is lifted, so no hand skids.
+const WORM_FOLD = {
+  torso: 124, head: 134,
+  nearLeg: [179, 188], farLeg: [179, 188], nearFoot: 100, farFoot: 100,
+  farArm: [187.2, 170.3], // far hand planted by the feet
+  nearArm: [195.8, 112.2], // near hand lifting to stride out
 };
-const WALK_OUT = {
-  torso: 118, head: 126,
-  nearArm: [168, 168], farArm: [193, 178],
-  nearLeg: [210, 210], nearFoot: 127,
-  farLeg: [210, 210], farFoot: 127,
+const WORM_REACH = {
+  torso: 70, head: 80,
+  nearLeg: [250, 250], farLeg: [250, 250], nearFoot: 166, farFoot: 166,
+  nearArm: [175.7, 175.6], // near hand planted under the shoulder
+  farArm: [237.2, 152.1], // far hand lifted, catching up
 };
 const WORM_PLANK = {
-  torso: 74, head: 82,
-  nearArm: [178, 178], farArm: [178, 178],
-  nearLeg: [248, 248], nearFoot: 170,
-  farLeg: [248, 248], farFoot: 170,
+  torso: 70, head: 78,
+  nearLeg: [250, 250], farLeg: [250, 250], nearFoot: 166, farFoot: 166,
+  nearArm: [175.7, 175.6], farArm: [175.7, 175.6],
+};
+// Half inchworm (toes pinned at x 55): knees bent, hands stride out to x 122 with the hips high.
+const HALF_WORM_FOLD = {
+  torso: 116, head: 128,
+  nearLeg: [158, 202], farLeg: [158, 202], nearFoot: 100, farFoot: 100,
+  farArm: [183.3, 171.8], // far hand planted (x 83.9)
+  nearArm: [193.4, 117.2], // near hand lifting
+};
+const HALF_WORM_REACH = {
+  torso: 105, head: 117,
+  nearLeg: [186, 235.6], farLeg: [186, 235.6], nearFoot: 112, farFoot: 112,
+  nearArm: [185.6, 171.6], // near hand planted (x 122)
+  farArm: [237.3, 157.1], // far hand lifted, catching up
+};
+const HALF_WORM_PIKE = {
+  torso: 105, head: 117,
+  nearLeg: [186, 235.6], farLeg: [186, 235.6], nearFoot: 112, farFoot: 112,
+  nearArm: [185.6, 171.6], farArm: [185.6, 171.6],
 };
 
 export default [
@@ -488,15 +506,15 @@ export default [
     demo: {
       view: 'side',
       anchor: { joint: 'nearHand', x: 150 },
-      focus: ['full'],
+      focus: ['legs', 'chest'],
       contacts: ['nearHand', 'farHand'],
       keys: [
-        { pose: CROUCH, dur: 0.32, hold: 0.25, ease: 'in' },
-        { pose: KICK_BACK, dur: 0.25, hold: 0, ease: 'out', tween: true }, // jumping the feet back
-        { pose: PLANK, dur: 0.28, hold: 0.45, ease: 'in' },
-        { pose: KICK_BACK, dur: 0.25, hold: 0, ease: 'out', tween: true }, // jumping the feet in
-        { pose: CROUCH, dur: 0.38, hold: 0.15, ease: 'out' },
-        { pose: { torso: 2, nearArm: [50, 38], nearLeg: [180, 182], nearFoot: 138, lift: 8, dx: -22 }, dur: 0.42, hold: 0.04, ease: 'in' },
+        { pose: CROUCH, dur: 0.24, hold: 0.2, ease: 'out', contacts: ['nearHand', 'farHand', 'nearToe', 'farToe'] },
+        { pose: TUCK, dur: 0.26, hold: 0, ease: 'in', tween: true }, // hopping the feet back
+        { pose: PLANK, dur: 0.24, hold: 0.4, ease: 'out', contacts: ['nearHand', 'farHand', 'nearToe', 'farToe'] },
+        { pose: TUCK, dur: 0.26, hold: 0, ease: 'in', tween: true }, // hopping the feet in
+        { pose: CROUCH, dur: 0.36, hold: 0.12, ease: 'out', anchor: { joint: 'nearToe', x: 124.8 }, contacts: ['nearHand', 'farHand', 'nearToe', 'farToe'] },
+        { pose: { torso: 2, nearArm: [40, 28], farArm: [40, 28], nearLeg: [180, 182], farLeg: [180, 182], nearFoot: 135, farFoot: 135, lift: 8 }, dur: 0.45, hold: 0.04, ease: 'in', anchor: { joint: 'nearToe', x: 124.8 } },
       ],
     },
     alt: {
@@ -508,15 +526,15 @@ export default [
       demo: {
         view: 'side',
         anchor: { joint: 'farToe', x: 62 },
-        focus: ['full'],
-        contacts: ['nearToe', 'farToe'],
+        focus: ['legs', 'chest'],
+        contacts: ['nearHand', 'farHand'],
         keys: [
-          { pose: { torso: 2, nearArm: [22, 14], nearLeg: [180, 180] }, dur: 0.7, hold: 0.25 },
-          { pose: SB_DOWN, dur: 0.55, hold: 0.1 },
-          { pose: SB_ONE_BACK, dur: 0.55, hold: 0.1 },
-          { pose: SB_PLANK, dur: 0.55, hold: 0.25 },
-          { pose: SB_ONE_IN, dur: 0.55, hold: 0.1 },
-          { pose: SB_DOWN, dur: 0.7, hold: 0.1, tween: true },
+          { pose: { torso: 2, nearArm: [22, 14], farArm: [22, 14], nearLeg: [180, 180], farLeg: [180, 180] }, dur: 0.75, hold: 0.25, contacts: ['nearToe', 'farToe'] },
+          { pose: SB_HANDS_DOWN, dur: 0.5, hold: 0.05, anchor: { joint: 'nearHand', x: 134 }, contacts: ['nearHand', 'farHand', 'farToe'] },
+          { pose: SB_ONE_BACK, dur: 0.5, hold: 0.05, anchor: { joint: 'nearHand', x: 134 }, contacts: ['nearHand', 'farHand', 'nearToe'] },
+          { pose: SB_PLANK, dur: 0.5, hold: 0.3, anchor: { joint: 'nearHand', x: 134 }, contacts: ['nearHand', 'farHand', 'nearToe', 'farToe'] },
+          { pose: SB_ONE_IN, dur: 0.5, hold: 0.05, anchor: { joint: 'nearHand', x: 134 }, contacts: ['nearHand', 'farHand', 'farToe'] },
+          { pose: swap(SB_HANDS_DOWN), dur: 0.75, hold: 0.05, anchor: { joint: 'nearToe', x: 62 }, contacts: ['nearHand', 'farHand', 'nearToe'] },
         ],
       },
     },
@@ -638,15 +656,15 @@ export default [
     demo: {
       view: 'side',
       anchor: { joint: 'nearToe', x: 38 },
-      focus: ['full'],
+      focus: ['core', 'shoulders'],
       contacts: ['nearToe', 'farToe'],
       keys: [
         { pose: { torso: 0, nearArm: [180, 180], nearLeg: [180, 180] }, dur: 0.6, hold: 0.2 },
-        { pose: FOLD, dur: 0.5, hold: 0.1 },
-        { pose: WALK_OUT, dur: 0.5, hold: 0.05 },
-        { pose: WORM_PLANK, dur: 0.5, hold: 0.3 },
-        { pose: swap(WALK_OUT), dur: 0.5, hold: 0.05, tween: true },
-        { pose: FOLD, dur: 0.6, hold: 0.1, tween: true },
+        { pose: WORM_FOLD, dur: 0.5, hold: 0.05, contacts: ['nearToe', 'farToe', 'farHand'] },
+        { pose: WORM_REACH, dur: 0.35, hold: 0.05, contacts: ['nearToe', 'farToe', 'nearHand'] },
+        { pose: WORM_PLANK, dur: 0.35, hold: 0.35, contacts: ['nearToe', 'farToe', 'nearHand', 'farHand'] },
+        { pose: swap(WORM_REACH), dur: 0.5, hold: 0.05, contacts: ['nearToe', 'farToe', 'farHand'] },
+        { pose: swap(WORM_FOLD), dur: 0.6, hold: 0.05, contacts: ['nearToe', 'farToe', 'nearHand'] },
       ],
     },
     alt: {
@@ -658,13 +676,15 @@ export default [
       demo: {
         view: 'side',
         anchor: { joint: 'nearToe', x: 55 },
-        focus: ['full'],
+        focus: ['core', 'shoulders'],
         contacts: ['nearToe', 'farToe'],
         keys: [
           { pose: { torso: 0, nearArm: [180, 180], nearLeg: [180, 180] }, dur: 0.8, hold: 0.2 },
-          { pose: { torso: 116, head: 130, nearArm: [182, 180], nearLeg: [158, 202] }, dur: 0.7, hold: 0.15 },
-          { pose: { torso: 118, head: 126, nearArm: [165, 165], farArm: [188, 180], nearLeg: [180, 212], nearFoot: 118 }, dur: 0.7, hold: 0.3 },
-          { pose: { torso: 116, head: 130, nearArm: [182, 180], nearLeg: [158, 202] }, dur: 0.8, hold: 0.15, tween: true },
+          { pose: HALF_WORM_FOLD, dur: 0.55, hold: 0.05, contacts: ['nearToe', 'farToe', 'farHand'] },
+          { pose: HALF_WORM_REACH, dur: 0.45, hold: 0.05, contacts: ['nearToe', 'farToe', 'nearHand'] },
+          { pose: HALF_WORM_PIKE, dur: 0.45, hold: 0.4, contacts: ['nearToe', 'farToe', 'nearHand', 'farHand'] },
+          { pose: swap(HALF_WORM_REACH), dur: 0.55, hold: 0.05, contacts: ['nearToe', 'farToe', 'farHand'] },
+          { pose: swap(HALF_WORM_FOLD), dur: 0.8, hold: 0.05, contacts: ['nearToe', 'farToe', 'nearHand'] },
         ],
       },
     },
