@@ -111,7 +111,7 @@ test('manifest defines identity, scope, display and colours (Requirement 35)', (
   assert.equal(m.name, 'His Ability');
   assert.equal(typeof m.short_name, 'string');
   assert.ok(m.short_name.length > 0 && m.short_name.length <= 12, 'short_name fits under a home-screen icon');
-  assert.equal(m.id, './');
+  assert.equal(m.id, 'his-ability');
   assert.equal(m.start_url, './');
   assert.equal(m.scope, './');
   assert.equal(m.display, 'standalone');

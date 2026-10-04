@@ -39,7 +39,9 @@ const state = {
   updateReady: false,
   updateToastShown: false,
   wakeHintShown: false,
+  soundHintShown: false,
   endWasRunning: false,
+  workoutUsed: false,
 };
 
 let cues = null;
@@ -157,8 +159,11 @@ function showScreen(name) {
     el.hidden = id !== name;
   }
   document.body.dataset.screen = name;
+  // iOS keeps dark status-bar text on a light theme colour, so only Android/desktop get plum in light mode.
+  const ios = installInfo().platform === 'ios';
   for (const m of themeMetas) {
-    m.el.setAttribute('content', name === 'player' ? (m.dark ? PLAYER_THEME.dark : PLAYER_THEME.light) : m.original);
+    const player = name === 'player' && (m.dark || !ios);
+    m.el.setAttribute('content', player ? (m.dark ? PLAYER_THEME.dark : PLAYER_THEME.light) : m.original);
   }
   window.scrollTo(0, 0);
 }
@@ -244,6 +249,9 @@ function ensureCues() {
 function startWorkout() {
   if (!state.workout || state.session) return;
   toaster.clearPassive();
+  // An update offer never stays over the player; it comes back when the workout ends.
+  document.querySelector('#toasts [data-toast="update"]')?.remove();
+  state.updateToastShown = false;
   // Must run synchronously inside the tap: unlocks WebAudio and speech on iOS Safari.
   ensureCues();
   try {
@@ -264,6 +272,7 @@ function startWorkout() {
     return;
   }
   state.session = session;
+  state.workoutUsed = true;
   session.on(onSessionEvent);
 
   const fromPreview = preview.isOpen;
@@ -281,9 +290,15 @@ function startWorkout() {
   wakeLock
     .acquire()
     .then((ok) => {
-      if (ok || state.wakeHintShown || state.session !== session) return;
-      state.wakeHintShown = true;
-      player.hint('Tip: keep your screen awake for this workout');
+      if (state.session !== session) return;
+      if (!ok && !state.wakeHintShown) {
+        state.wakeHintShown = true;
+        player.hint('Tip: keep your screen awake for this workout');
+      } else if (state.audio && !state.soundHintShown && installInfo().platform === 'ios') {
+        // The ring/silent switch can mute web audio on iPhone.
+        state.soundHintShown = true;
+        player.hint('No sound? Check that Silent mode is off', 6000);
+      }
     })
     .catch(() => {});
 }
@@ -367,10 +382,31 @@ function stopLoop() {
 }
 
 document.addEventListener('visibilitychange', () => {
-  if (!state.session) return;
+  const hidden = document.visibilityState === 'hidden';
+  if (!state.session) {
+    // iOS resumes a suspended home-screen app instead of relaunching it. Once a workout has been
+    // used, leaving the app sets up a fresh one, so reopening shows no trace of the last session.
+    if (hidden && state.workoutUsed) freshAfterUse();
+    if (!hidden && state.updateReady) {
+      state.updateToastShown = Boolean(document.querySelector('#toasts [data-toast="update"]'));
+      maybeShowUpdate();
+    }
+    return;
+  }
   pump();
-  if (document.visibilityState === 'visible' && !rafId) rafId = requestAnimationFrame(frame);
+  if (!hidden && !rafId) rafId = requestAnimationFrame(frame);
 });
+
+function freshAfterUse() {
+  state.workoutUsed = false;
+  if (endDialog.isOpen) endDialog.dismiss();
+  if (preview.isOpen) closePreview();
+  if (about.isOpen) closeAbout();
+  if (state.screen === 'finish') popLayer('finish');
+  generate(state.workout?.key ?? null);
+  showScreen('home');
+  renderHome();
+}
 
 function togglePause() {
   const s = state.session;
@@ -493,7 +529,10 @@ function completeWorkout(snap) {
 }
 
 function leaveFinish(another) {
-  if (another) generate(state.workout?.key ?? null);
+  if (another) {
+    generate(state.workout?.key ?? null);
+    state.workoutUsed = false;
+  }
   popLayer('finish');
   goHome();
   if (another) announce('New workout ready');
@@ -534,6 +573,7 @@ function maybeShowUpdate() {
 initHistory();
 generate();
 renderHome();
+ensureCues(); // starts loading speech voices; audio itself unlocks on the first Start tap
 
 try {
   onInstallChange(() => {
@@ -553,7 +593,11 @@ initPWA({
     const wasFailed = state.offlineFailed;
     state.offlineFailed = false;
     if (wasFailed && state.screen === 'home') renderHome();
-    if (!state.session) toaster.show({ message: 'Ready to use offline', duration: 3500, id: 'offline' });
+    const info = installInfo();
+    const message = info.platform === 'ios' && !info.standalone
+      ? 'Ready offline in Safari. After adding it to your Home Screen, open it there once while online.'
+      : 'Ready to use offline';
+    if (!state.session) toaster.show({ message, duration: 5000, id: 'offline' });
     if (about.isOpen) about.render(aboutInfo());
   },
   onOfflineFailed() {

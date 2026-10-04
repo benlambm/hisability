@@ -129,6 +129,12 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   background: var(--bg);
+  overscroll-behavior: none;
+}
+
+/* No ivory flash when the plum player rubber-bands on iOS. */
+html:has(body[data-screen="player"]) {
+  background: var(--player-bg);
 }
 
 body {
@@ -1341,6 +1347,12 @@ body[data-screen="player"] .toasts {
   --focus: #f6d9c8;
 }
 
+.screen-player {
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 .screen-player[data-kind="prep"] { --pl-state: var(--pl-prep); }
 .screen-player[data-kind="transition"] { --pl-state: var(--pl-rest); }
 .screen-player[data-final="true"] { --pl-ring: var(--pl-final); }
@@ -1950,6 +1962,66 @@ body[data-screen="player"] .toasts {
   }
   .pl-stage {
     min-height: 140px;
+  }
+}
+
+/* Phone on its side (iOS ignores the manifest's portrait lock): stage left, guidance right. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .screen-player {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+  }
+  .pl-inner {
+    display: grid;
+    max-width: 980px;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto minmax(0, 1fr) auto;
+    column-gap: 20px;
+    row-gap: 6px;
+  }
+  .pl-top,
+  .pl-progress {
+    grid-column: 1 / -1;
+  }
+  .pl-stage {
+    grid-column: 1;
+    grid-row: 3 / -1;
+    min-height: 0;
+  }
+  .pl-state,
+  .pl-name,
+  .pl-info,
+  .pl-controls {
+    grid-column: 2;
+  }
+  .pl-name {
+    font-size: 1.5rem;
+  }
+  .pl-ring {
+    width: 84px;
+    height: 84px;
+  }
+  .pl-ring-num {
+    font-size: 2.125rem;
+  }
+  .pl-cue {
+    font-size: 0.9375rem;
+  }
+  .pl-controls {
+    align-self: end;
+  }
+  .ctl {
+    grid-template-rows: 56px auto;
+    gap: 2px;
+  }
+  .ctl-pause .ctl-icon {
+    width: 56px;
+    height: 56px;
+  }
+  .ctl-icon {
+    width: 42px;
+    height: 42px;
   }
 }
 

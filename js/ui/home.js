@@ -150,6 +150,7 @@ export function createHome(root, handlers) {
             h('span', { class: 'inline-glyph' }, icon('more', { size: 17, label: 'More' })),
             ' then Share), then Add to Home Screen.',
           ),
+          h('p', { class: 'note-text' }, 'Then open it once from your Home Screen while online so it works offline.'),
         ),
         dismiss,
       );
