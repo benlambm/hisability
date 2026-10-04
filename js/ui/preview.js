@@ -86,6 +86,7 @@ export function createPreview(dialog, handlers) {
   const footer = h('div', { class: 'sheet-footer' }, h('div', { class: 'sheet-footer-inner' }, shuffleBtn, startBtn));
   const head = h('div', { class: 'sheet-head' }, closeBtn, h('p', { class: 'sheet-head-title', 'aria-hidden': 'true' }, 'Preview'));
   dialog.replaceChildren(h('div', { class: 'sheet-frame' }, head, scroller, footer));
+  scroller.addEventListener('scroll', () => head.classList.toggle('is-scrolled', scroller.scrollTop > 4), { passive: true });
 
   dialog.addEventListener('cancel', (e) => {
     e.preventDefault();

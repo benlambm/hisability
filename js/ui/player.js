@@ -253,7 +253,7 @@ export function createPlayer(root, handlers) {
       setText(stateText, si.label);
     }
     const cat = CATEGORY_LABELS[move.category] ?? '';
-    const eyebrowText = kind === 'work' ? cat : `Up next · ${cat}`;
+    const eyebrowText = kind === 'prep' ? `Up next · ${cat}` : cat;
     setText(eyebrow, eyebrowText);
 
     // Name, cue, badges, demo.
@@ -264,6 +264,7 @@ export function createPlayer(root, handlers) {
     sidesBadge.classList.toggle('is-now', halfwayNow);
     setText(sidesBadge.lastChild, halfwayNow ? 'Switch sides now' : 'Switch sides halfway');
     easierBadge.hidden = !alt;
+    stage.classList.toggle('has-badges', version.switchSides || alt);
     const key = `${moveIndex}:${alt}`;
     if (key !== demoKey) {
       demoKey = key;

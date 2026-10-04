@@ -105,7 +105,7 @@
     --backdrop: rgba(0, 0, 0, 0.55);
     --shadow-card: 0 1px 1px rgba(0, 0, 0, 0.2), 0 12px 32px -20px rgba(0, 0, 0, 0.6);
 
-    --player-bg: #2b1c27;
+    --player-bg: #2e1a2b;
     --player-glow: rgba(217, 119, 87, 0.16);
     --player-glow-2: rgba(122, 74, 107, 0.22);
     --pl-stage: #3a2b35;
@@ -456,11 +456,32 @@ svg.icon {
 }
 
 .home-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: 12px;
   padding-top: 14px;
+}
+
+/* The motto spans the full width under the wordmark and the info button. */
+.home-brand {
+  display: contents;
+}
+
+.home-header .wordmark {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+}
+
+.home-header .info-btn {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.home-header .motto {
+  grid-column: 1 / -1;
+  grid-row: 2;
 }
 
 .wordmark {
@@ -533,7 +554,7 @@ svg.icon {
   grid-template-columns: 1.5rem minmax(0, 1fr) auto;
   align-items: baseline;
   column-gap: 12px;
-  padding: 8px 0;
+  padding: 7px 0;
   border-top: 1px solid var(--line);
 }
 
@@ -659,11 +680,11 @@ svg.icon {
 
 @media (min-width: 640px) {
   .move-list {
-    columns: 2;
-    column-gap: 28px;
-  }
-  .move-row {
-    break-inside: avoid;
+    display: grid;
+    grid-template-rows: repeat(6, auto);
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    column-gap: 32px;
   }
   .move-row:nth-child(7) {
     border-top: 0;
@@ -671,6 +692,9 @@ svg.icon {
 }
 
 @media (min-width: 640px) {
+  .home-inner {
+    max-width: 680px;
+  }
   .wordmark {
     font-size: 3.25rem;
   }
@@ -804,6 +828,15 @@ dialog::backdrop {
   padding: calc(var(--safe-t) + 10px) calc(var(--safe-r) + 14px) 6px calc(var(--safe-l) + 14px);
 }
 
+.sheet-head {
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s var(--ease);
+}
+
+.sheet-head.is-scrolled {
+  border-bottom-color: var(--line);
+}
+
 .sheet-modal .sheet-head {
   padding-top: 12px;
 }
@@ -929,12 +962,13 @@ dialog::backdrop {
 
 .pv-item {
   display: grid;
-  grid-template-columns: 116px minmax(0, 1fr);
+  grid-template-columns: 104px minmax(0, 1fr);
   grid-template-areas:
-    "demo body"
+    "demo head"
+    "more more"
     "switch switch";
-  gap: 6px 16px;
-  padding: 14px 14px 8px;
+  gap: 0 16px;
+  padding: 14px 14px 6px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
@@ -943,9 +977,14 @@ dialog::backdrop {
 .pv-item.has-strip {
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
-    "body"
+    "head"
     "demo"
+    "more"
     "switch";
+}
+
+.pv-item.has-strip .pv-demo {
+  margin-top: 12px;
 }
 
 .pv-demo {
@@ -968,9 +1007,19 @@ dialog::backdrop {
   margin: 0 auto;
 }
 
-.pv-body {
-  grid-area: body;
+.pv-head {
+  grid-area: head;
   min-width: 0;
+  align-self: center;
+}
+
+.pv-more {
+  grid-area: more;
+  min-width: 0;
+}
+
+.pv-head .tag {
+  margin-top: 6px;
 }
 
 .pv-meta {
@@ -1009,7 +1058,7 @@ dialog::backdrop {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-top: 8px;
+  margin-top: 12px;
   font-size: 0.8125rem;
   font-weight: 600;
   color: var(--accent);
@@ -1023,7 +1072,7 @@ dialog::backdrop {
 }
 
 .pv-alt {
-  margin-top: 10px;
+  margin-top: 12px;
   padding-top: 10px;
   border-top: 1px dashed var(--line-strong);
   font-size: 0.875rem;
@@ -1051,16 +1100,23 @@ dialog::backdrop {
 
 @media (max-width: 359px) {
   .pv-item {
-    grid-template-columns: 92px minmax(0, 1fr);
-    gap: 6px 12px;
-    padding: 12px 12px 6px;
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 0 12px;
+    padding: 12px 12px 4px;
+  }
+  .pv-name {
+    font-size: 1.125rem;
   }
 }
 
 @media (min-width: 640px) {
   .pv-item {
-    grid-template-columns: 156px minmax(0, 1fr);
+    grid-template-columns: 148px minmax(0, 1fr);
   }
+}
+
+.sheet-title:focus {
+  outline: none;
 }
 
 /* About */
@@ -1436,6 +1492,10 @@ body[data-screen="player"] .toasts {
   inset: 14px 10px 6px;
 }
 
+.pl-stage.has-badges .pl-figure {
+  top: 46px;
+}
+
 .pl-figure .fig-wrap {
   width: 100%;
   height: 100%;
@@ -1674,7 +1734,7 @@ body[data-screen="player"] .toasts {
   grid-template-rows: 80px auto;
   justify-items: center;
   align-items: center;
-  gap: 2px;
+  gap: 6px;
   min-width: 44px;
   padding: 0;
   border: 0;
@@ -1846,11 +1906,11 @@ body[data-screen="player"] .toasts {
 @media (max-height: 600px) {
   .screen-player {
     height: auto;
+    min-height: 100vh;
     min-height: 100dvh;
   }
   .pl-stage {
-    flex: 0 0 auto;
-    height: 150px;
+    min-height: 140px;
   }
 }
 
@@ -2007,6 +2067,9 @@ body[data-screen="player"] .toasts {
 }
 
 @media (max-height: 700px) {
+  .screen-finish {
+    padding-bottom: calc(var(--safe-b) + 16px);
+  }
   .fin-inner {
     gap: 20px;
   }

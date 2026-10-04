@@ -24,12 +24,12 @@ export default [
     description: 'Side view. The figure sits the hips back and down until the thighs are about level with the floor, arms reaching forward for balance, then stands tall.',
     demo: {
       view: 'side',
-      anchor: { joint: 'nearAnkle', x: 106 },
+      anchor: { joint: 'nearAnkle', x: 98 },
       focus: ['legs'],
       contacts: ['nearToe', 'nearAnkle'],
       keys: [
         { pose: { torso: 0, nearArm: [176, 176], farArm: [184, 184] }, dur: 1.3, hold: 0.25 },
-        { pose: { torso: 34, nearArm: [88, 92], farArm: [93, 97], nearLeg: [97, 208] }, dur: 1, hold: 0.2 },
+        { pose: { torso: 34, head: 20, nearArm: [88, 92], farArm: [93, 97], nearLeg: [97, 208] }, dur: 1, hold: 0.2 },
       ],
     },
     alt: {
@@ -39,12 +39,12 @@ export default [
       description: 'Side view. The figure bends the knees and sits the hips back about halfway, arms forward, then stands tall.',
       demo: {
         view: 'side',
-        anchor: { joint: 'nearAnkle', x: 104 },
+        anchor: { joint: 'nearAnkle', x: 100 },
         focus: ['legs'],
         contacts: ['nearToe', 'nearAnkle'],
         keys: [
           { pose: { torso: 0, nearArm: [176, 176], farArm: [184, 184] }, dur: 1.1, hold: 0.25 },
-          { pose: { torso: 20, nearArm: [100, 104], farArm: [104, 108], nearLeg: [128, 196] }, dur: 0.9, hold: 0.2 },
+          { pose: { torso: 20, head: 12, nearArm: [100, 104], farArm: [104, 108], nearLeg: [128, 196] }, dur: 0.9, hold: 0.2 },
         ],
       },
     },
@@ -71,9 +71,9 @@ export default [
       contacts: ['nearToe', 'farToe'],
       keys: [
         { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [149.1, 160.3], farLeg: [210.9, 199.7], nearFoot: 112 }, dur: 0.65, hold: 0.25, ease: 'in' },
-        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [118.9, 182.6], farLeg: [241.1, 177.4], nearFoot: 112 }, dur: 0.65, hold: 0, ease: 'out', tween: true },
+        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [120.1, 182.7], farLeg: [239.8, 177.1], nearFoot: 112, dx: -0.2 }, dur: 0.65, hold: 0, ease: 'out', tween: true },
         { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [100, 189.2], farLeg: [260, 170.8], nearFoot: 112 }, dur: 0.5, hold: 0.2, ease: 'in' },
-        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [118.9, 182.6], farLeg: [241.1, 177.4], nearFoot: 112 }, dur: 0.5, hold: 0, ease: 'out', tween: true },
+        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [120.9, 182.7], farLeg: [239.1, 177.6], nearFoot: 112 }, dur: 0.5, hold: 0, ease: 'out', tween: true },
       ],
     },
     alt: {
@@ -133,15 +133,15 @@ export default [
       description: 'Side view. Standing in a short split stance with both hands on a wall, the figure bends both knees a small amount and rises again.',
       demo: {
         view: 'side',
-        anchor: { joint: 'nearAnkle', x: 118 },
-        props: [{ type: 'wall', x: 149, side: 'right' }],
+        anchor: { joint: 'nearAnkle', x: 112 },
+        props: [{ type: 'wall', x: 143, side: 'right' }],
         focus: ['legs'],
         contacts: ['nearToe', 'nearAnkle', 'farToe'],
         keys: [
           { pose: { torso: 2, nearArm: [113.2, 70.9], farArm: [113.2, 70.9], nearLeg: [148.3, 174.6], farLeg: [195.8, 223.9], farFoot: 128 }, dur: 0.55, hold: 0.2, ease: 'in' },
-          { pose: { torso: 3, nearArm: [106.7, 64.3], farArm: [106.7, 64.3], nearLeg: [135.1, 184.3], farLeg: [186.4, 237.4], farFoot: 128 }, dur: 0.55, hold: 0, ease: 'out', tween: true },
+          { pose: { torso: 3, nearArm: [106.7, 64.3], farArm: [106.7, 64.3], nearLeg: [136.7, 181.9], farLeg: [185.8, 235.7], farFoot: 128 }, dur: 0.55, hold: 0, ease: 'out', tween: true },
           { pose: { torso: 4, nearArm: [98.3, 60], farArm: [98.3, 60], nearLeg: [125.3, 189.8], farLeg: [180.8, 247.4], farFoot: 128 }, dur: 0.45, hold: 0.2, ease: 'in' },
-          { pose: { torso: 3, nearArm: [106.7, 64.3], farArm: [106.7, 64.3], nearLeg: [135.1, 184.3], farLeg: [186.4, 237.4], farFoot: 128 }, dur: 0.45, hold: 0, ease: 'out', tween: true },
+          { pose: { torso: 3, nearArm: [106.7, 64.3], farArm: [106.7, 64.3], nearLeg: [136.6, 183], farLeg: [186.9, 235.7], farFoot: 128, dx: 0.1 }, dur: 0.45, hold: 0, ease: 'out', tween: true },
         ],
       },
     },
@@ -170,9 +170,9 @@ export default [
       contacts: ['nearToe', 'nearAnkle', 'farToe'],
       keys: [
         { pose: { torso: 3, nearArm: [225, 130], nearLeg: [147.8, 168.7], farLeg: [202.1, 223.1], farFoot: 130 }, dur: 0.65, hold: 0.2, ease: 'in' },
-        { pose: { torso: 5.5, nearArm: [227.5, 132.5], nearLeg: [121.4, 187.4], farLeg: [186.6, 250.9], farFoot: 130 }, dur: 0.65, hold: 0, ease: 'out', tween: true },
+        { pose: { torso: 5.5, nearArm: [227.5, 132.5], nearLeg: [124.4, 184.9], farLeg: [186.6, 247.3], farFoot: 130 }, dur: 0.65, hold: 0, ease: 'out', tween: true },
         { pose: { torso: 8, nearArm: [230, 135], nearLeg: [103, 194], farLeg: [182.8, 270.7], farFoot: 130 }, dur: 0.5, hold: 0.2, ease: 'in' },
-        { pose: { torso: 5.5, nearArm: [227.5, 132.5], nearLeg: [121.4, 187.4], farLeg: [186.6, 250.9], farFoot: 130 }, dur: 0.5, hold: 0, ease: 'out', tween: true },
+        { pose: { torso: 5.5, nearArm: [227.5, 132.5], nearLeg: [124, 190.1], farLeg: [191.4, 247.6], farFoot: 130, dx: 0.2 }, dur: 0.5, hold: 0, ease: 'out', tween: true },
       ],
     },
     alt: {
@@ -188,9 +188,9 @@ export default [
         contacts: ['nearToe', 'nearAnkle', 'farToe'],
         keys: [
           { pose: { torso: 2, nearArm: [115.1, 87.7], farArm: [224, 129], nearLeg: [142.8, 176.2], farLeg: [198.9, 227.6], farFoot: 130 }, dur: 0.6, hold: 0.2, ease: 'in' },
-          { pose: { torso: 3, nearArm: [110.1, 74.1], farArm: [225, 130], nearLeg: [126.6, 187], farLeg: [188.1, 245.7], farFoot: 130, dx: 0.1 }, dur: 0.6, hold: 0, ease: 'out', tween: true },
+          { pose: { torso: 3, nearArm: [110.1, 74.1], farArm: [225, 130], nearLeg: [128.7, 187.3], farLeg: [189.5, 244], farFoot: 130 }, dur: 0.6, hold: 0, ease: 'out', tween: true },
           { pose: { torso: 4, nearArm: [100, 65.6], farArm: [226, 131], nearLeg: [114.1, 192.7], farLeg: [183.1, 259.3], farFoot: 130 }, dur: 0.5, hold: 0.2, ease: 'in' },
-          { pose: { torso: 3, nearArm: [110.1, 74.1], farArm: [225, 130], nearLeg: [126.6, 187], farLeg: [188.1, 245.7], farFoot: 130, dx: 0.1 }, dur: 0.5, hold: 0, ease: 'out', tween: true },
+          { pose: { torso: 3, nearArm: [110.1, 74.1], farArm: [225, 130], nearLeg: [128.6, 182.8], farLeg: [185.8, 243.4], farFoot: 130, dx: 0.1 }, dur: 0.5, hold: 0, ease: 'out', tween: true },
         ],
       },
     },
@@ -209,6 +209,7 @@ export default [
     setup: 'Stand with feet wide apart, toes forward, hands on hips.',
     cue: 'Shift to one side, bend that knee, keep the other straight.',
     mistake: 'Letting the bent knee cave inward or the heel lift.',
+    caution: 'Use a narrower stance if the stretch feels too deep.',
     description: 'Front view. From a wide stance the figure shifts the hips to one side, bending that knee while the other leg stays straight, returns to center, then switches sides.',
     demo: {
       view: 'front',
@@ -216,10 +217,12 @@ export default [
       focus: ['legs'],
       contacts: ['nearToe', 'farToe'],
       keys: [
-        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [140.9, 151.1], farLeg: [219.1, 208.9] }, dur: 1, hold: 0.15 },
-        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [107.5, 198.4], farLeg: [236.8, 226.6] }, dur: 1, hold: 0.2 },
-        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [140.9, 151.1], farLeg: [219.1, 208.9] }, dur: 1, hold: 0.15 },
-        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [123.2, 133.4], farLeg: [252.5, 161.6] }, dur: 1, hold: 0.2 },
+        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [107.5, 198.4], farLeg: [236.8, 226.6] }, dur: 0.7, hold: 0.25, ease: 'in' },
+        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [122.7, 173.5], farLeg: [228.2, 209.6], dx: -0.3 }, dur: 0.45, hold: 0, ease: 'linear', tween: true },
+        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [132.4, 148.5], farLeg: [237.9, 185.7], dx: 0.2 }, dur: 0.7, hold: 0, ease: 'out', tween: true },
+        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [123.2, 133.4], farLeg: [252.5, 161.6] }, dur: 0.7, hold: 0.25, ease: 'in' },
+        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [133.3, 149.4], farLeg: [236.3, 187.5], dx: -0.2 }, dur: 0.45, hold: 0, ease: 'linear', tween: true },
+        { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [122.2, 175.9], farLeg: [226.8, 212.7], dx: -0.4 }, dur: 0.7, hold: 0, ease: 'out', tween: true },
       ],
     },
     alt: {
@@ -233,10 +236,12 @@ export default [
         focus: ['legs'],
         contacts: ['nearToe', 'farToe'],
         keys: [
-          { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [146.2, 156.4], farLeg: [213.8, 203.6] }, dur: 0.9, hold: 0.15 },
-          { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [131.1, 178.2], farLeg: [219.1, 208.9], dx: 0.1 }, dur: 0.9, hold: 0.2 },
-          { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [146.2, 156.4], farLeg: [213.8, 203.6] }, dur: 0.9, hold: 0.15 },
-          { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [140.9, 151.1], farLeg: [228.9, 181.8] }, dur: 0.9, hold: 0.2 },
+          { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [128.5, 183.1], farLeg: [221, 210.8] }, dur: 0.65, hold: 0.25, ease: 'in' },
+          { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [135.1, 170.4], farLeg: [218, 204.8], dx: 0.2 }, dur: 0.42, hold: 0, ease: 'linear', tween: true },
+          { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [143.2, 155.5], farLeg: [223.4, 191], dx: -0.2 }, dur: 0.65, hold: 0, ease: 'out', tween: true },
+          { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [139, 149.2], farLeg: [231.5, 176.9] }, dur: 0.65, hold: 0.25, ease: 'in' },
+          { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [142.2, 156.2], farLeg: [224, 190.6], dx: -0.2 }, dur: 0.42, hold: 0, ease: 'linear', tween: true },
+          { pose: { torso: 0, nearArm: [139.8, 222.7], nearLeg: [136.8, 169.2], farLeg: [215.2, 206.7] }, dur: 0.65, hold: 0, ease: 'out', tween: true },
         ],
       },
     },
@@ -259,7 +264,7 @@ export default [
     description: 'Side view. With arms crossed and knees soft, the figure pushes the hips back and tips the chest forward with a flat back, then stands tall.',
     demo: {
       view: 'side',
-      anchor: { joint: 'nearAnkle', x: 112 },
+      anchor: { joint: 'nearAnkle', x: 96 },
       focus: ['glutes', 'back'],
       contacts: ['nearToe', 'nearAnkle'],
       keys: [
@@ -274,7 +279,7 @@ export default [
       description: 'Side view. With hands on the front of the thighs, the figure pushes the hips back and tips forward partway, hands sliding toward the knees, then stands.',
       demo: {
         view: 'side',
-        anchor: { joint: 'nearAnkle', x: 110 },
+        anchor: { joint: 'nearAnkle', x: 96 },
         focus: ['glutes', 'back'],
         contacts: ['nearToe', 'nearAnkle'],
         keys: [
@@ -333,14 +338,13 @@ export default [
   {
     id: 'wall-sit',
     name: 'Wall Sit',
-    say: 'Wall sit',
     category: 'lower',
     region: 'legs',
     pattern: 'squat',
     impact: 'low',
     equipment: 'wall',
     setup: 'Stand with your back to a wall, feet out in front, hip-width apart.',
-    cue: 'Slide down until your knees bend, then hold.',
+    cue: 'Keep your back flat on the wall and breathe.',
     mistake: 'Letting the knees drift past the toes or the back leave the wall.',
     caution: 'Sit only as low as feels comfortable for your knees.',
     description: 'Side view. The figure rests its back against a wall with knees bent and thighs about level with the floor, hands resting on the thighs, breathing steadily.',
@@ -357,7 +361,7 @@ export default [
     },
     alt: {
       name: 'High Wall Sit',
-      cue: 'Slide down only a little and hold.',
+      cue: 'Bend your knees only slightly and hold.',
       equipment: 'wall',
       description: 'Side view. The figure leans its back against a wall with a small knee bend, hands on the thighs, breathing steadily.',
       demo: {
@@ -384,18 +388,18 @@ export default [
     pattern: 'calf',
     impact: 'low',
     equipment: 'none',
-    setup: 'Stand tall, feet hip-width apart, arms relaxed.',
+    setup: 'Stand tall, feet hip-width apart, hands on hips.',
     cue: 'Rise onto the balls of your feet, then lower slowly.',
     mistake: 'Rolling onto the outer edges of the feet.',
     description: 'Side view. Standing tall, the figure lifts both heels so the body rises onto the balls of the feet, pauses, then lowers the heels.',
     demo: {
       view: 'side',
-      anchor: { joint: 'nearToe', x: 106 },
+      anchor: { joint: 'nearToe', x: 112 },
       focus: ['calves'],
       contacts: ['nearToe'],
       keys: [
-        { pose: { torso: 0, nearArm: [178, 178], farArm: [182, 182], nearFoot: 100 }, dur: 0.9, hold: 0.2 },
-        { pose: { torso: 0, nearArm: [178, 178], farArm: [182, 182], nearFoot: 148 }, dur: 1.1, hold: 0.35 },
+        { pose: { torso: 0, nearArm: [222, 127], farArm: [219, 124], nearFoot: 100 }, dur: 0.9, hold: 0.2 },
+        { pose: { torso: 0, nearArm: [222, 127], farArm: [219, 124], nearFoot: 148 }, dur: 1.1, hold: 0.35 },
       ],
     },
     alt: {
@@ -405,8 +409,8 @@ export default [
       description: 'Side view. Facing a wall with hands resting on it, the figure lifts both heels and lowers them slowly.',
       demo: {
         view: 'side',
-        anchor: { joint: 'nearToe', x: 98 },
-        props: [{ type: 'wall', x: 138, side: 'right' }],
+        anchor: { joint: 'nearToe', x: 88 },
+        props: [{ type: 'wall', x: 128, side: 'right' }],
         focus: ['calves'],
         contacts: ['nearToe'],
         keys: [

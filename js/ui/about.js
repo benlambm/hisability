@@ -25,6 +25,7 @@ export function createAbout(dialog, handlers) {
     icon('close'),
   );
   const offlineRow = h('p', { class: 'about-status' });
+  const title = h('h2', { class: 'sheet-title', id: 'about-title', tabindex: '-1' }, 'His Ability');
   const installBox = h('div', { class: 'about-install' });
   const section = (title, ...body) => h('section', { class: 'about-section' }, h('h3', { class: 'about-h' }, title), ...body);
 
@@ -34,8 +35,7 @@ export function createAbout(dialog, handlers) {
     h(
       'div',
       { class: 'sheet-inner about-inner' },
-      h('p', { class: 'eyebrow' }, 'About'),
-      h('h2', { class: 'sheet-title', id: 'about-title' }, 'His Ability'),
+      title,
       h('p', { class: 'about-motto' }, MOTTO),
       h(
         'p',
@@ -50,7 +50,9 @@ export function createAbout(dialog, handlers) {
       h('p', { class: 'about-version' }, `Version ${APP_VERSION}`),
     ),
   );
-  dialog.replaceChildren(h('div', { class: 'sheet-frame' }, h('div', { class: 'sheet-head' }, closeBtn, h('p', { class: 'sheet-head-title', 'aria-hidden': 'true' }, 'About')), scroller));
+  const head = h('div', { class: 'sheet-head' }, closeBtn, h('p', { class: 'sheet-head-title', 'aria-hidden': 'true' }, 'About'));
+  dialog.replaceChildren(h('div', { class: 'sheet-frame' }, head, scroller));
+  scroller.addEventListener('scroll', () => head.classList.toggle('is-scrolled', scroller.scrollTop > 4), { passive: true });
 
   dialog.addEventListener('cancel', (e) => {
     e.preventDefault();
@@ -111,7 +113,7 @@ export function createAbout(dialog, handlers) {
       render(info);
       if (!dialog.open) dialog.showModal();
       scroller.scrollTop = 0;
-      closeBtn.focus({ preventScroll: true });
+      title.focus({ preventScroll: true });
       document.documentElement.classList.add('has-sheet');
     },
     close() {

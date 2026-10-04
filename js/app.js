@@ -22,7 +22,7 @@ const $ = (id) => document.getElementById(id);
 const blankAlternatives = () => new Array(TIMING.moves).fill(false);
 const guessVibration = () => typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function';
 
-const PLAYER_THEME = { light: '#4A2340', dark: '#2B1C27' };
+const PLAYER_THEME = { light: '#4A2340', dark: '#2E1A2B' };
 
 /** Everything lives in memory and disappears on reload or close (Requirement 54). */
 const state = {

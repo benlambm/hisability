@@ -94,10 +94,10 @@ const CLIMB_IN = {
   farLeg: [250, 250], farFoot: 170,
 };
 const CLIMB_PASS = {
-  torso: 70, head: 80,
+  torso: 81, head: 84, // hips bob up slightly so the knees pass clear of the floor
   nearArm: [180, 180], farArm: [180, 180],
-  nearLeg: [230, 270], nearFoot: 178,
-  farLeg: [230, 270], farFoot: 178,
+  nearLeg: [225, 260], nearFoot: 175,
+  farLeg: [225, 260], farFoot: 175,
 };
 const PLANK = {
   torso: 72, head: 80,
@@ -171,24 +171,24 @@ const SB_DOWN = {
   farLeg: [185, 225], farFoot: 140,
 };
 const SB_ONE_BACK = {
-  torso: 102, head: 100,
-  nearArm: [176, 176], farArm: [176, 176],
-  nearLeg: [230, 230], nearFoot: 171, // near foot stepped back
-  farLeg: [200, 232], farFoot: 96,
+  torso: 107, head: 102,
+  nearArm: [175, 175], farArm: [175, 175],
+  nearLeg: [225, 225], nearFoot: 177, // near foot stepped back
+  farLeg: [195, 230], farFoot: 114,
 };
 const SB_PLANK = {
-  torso: 82, head: 80,
-  nearArm: [186, 186], farArm: [186, 186],
-  nearLeg: [244, 244], nearFoot: 170,
-  farLeg: [244, 244], farFoot: 170,
+  torso: 81, head: 80,
+  nearArm: [189, 189], farArm: [189, 189],
+  nearLeg: [244, 244], nearFoot: 168,
+  farLeg: [244, 244], farFoot: 168,
   dx: -27,
 };
 const SB_ONE_IN = {
-  torso: 103, head: 100,
-  nearArm: [180, 180], farArm: [180, 180],
-  nearLeg: [200, 239], nearFoot: 118, // near foot stepped back in
-  farLeg: [230, 230], farFoot: 178,
-  dx: -25,
+  torso: 101, head: 100,
+  nearArm: [181, 181], farArm: [181, 181],
+  nearLeg: [197, 239], nearFoot: 116, // near foot stepped back in
+  farLeg: [230, 230], farFoot: 180,
+  dx: -27,
 };
 
 // ---- Inchworm (side view, toes pinned).
@@ -233,9 +233,9 @@ export default [
       contacts: ['nearToe', 'farToe'],
       keys: [
         { pose: { nearArm: [174, 178], nearLeg: [179, 180] }, dur: 0.15, hold: 0.04, ease: 'out' },
-        { pose: { nearArm: [100, 92], nearLeg: [168, 172], lift: 8 }, dur: 0.15, hold: 0, ease: 'in' },
+        { pose: { nearArm: [100, 92], nearLeg: [168, 172], lift: 8 }, dur: 0.15, hold: 0, ease: 'in', tween: true },
         { pose: { nearArm: [28, 12], nearLeg: [160, 166] }, dur: 0.15, hold: 0.04, ease: 'out' },
-        { pose: { nearArm: [100, 104], nearLeg: [168, 172], lift: 8 }, dur: 0.15, hold: 0, ease: 'in' },
+        { pose: { nearArm: [100, 104], nearLeg: [168, 172], lift: 8 }, dur: 0.15, hold: 0, ease: 'in', tween: true },
       ],
     },
     alt: {
@@ -280,9 +280,9 @@ export default [
       contacts: ['nearToe', 'farToe'],
       keys: [
         { pose: KNEE_UP, dur: 0.14, hold: 0.02, ease: 'in' },
-        { pose: RUN_PASS, dur: 0.14, hold: 0, ease: 'out' },
+        { pose: RUN_PASS, dur: 0.14, hold: 0, ease: 'out', tween: true },
         { pose: swap(KNEE_UP), dur: 0.14, hold: 0.02, ease: 'in' },
-        { pose: swap(RUN_PASS), dur: 0.14, hold: 0, ease: 'out' },
+        { pose: swap(RUN_PASS), dur: 0.14, hold: 0, ease: 'out', tween: true },
       ],
     },
     alt: {
@@ -328,9 +328,9 @@ export default [
       contacts: ['nearHand', 'farHand'],
       keys: [
         { pose: CLIMB_IN, dur: 0.18, hold: 0.04, ease: 'in' },
-        { pose: CLIMB_PASS, dur: 0.18, hold: 0, ease: 'out' },
+        { pose: CLIMB_PASS, dur: 0.18, hold: 0, ease: 'out', tween: true },
         { pose: swap(CLIMB_IN), dur: 0.18, hold: 0.04, ease: 'in' },
-        { pose: CLIMB_PASS, dur: 0.18, hold: 0, ease: 'out' },
+        { pose: CLIMB_PASS, dur: 0.18, hold: 0, ease: 'out', tween: true },
       ],
     },
     alt: {
@@ -523,9 +523,9 @@ export default [
       contacts: ['nearToe', 'farToe'],
       keys: [
         { pose: KICK_UP, dur: 0.14, hold: 0.02, ease: 'in' },
-        { pose: RUN_PASS, dur: 0.14, hold: 0, ease: 'out' },
+        { pose: RUN_PASS, dur: 0.14, hold: 0, ease: 'out', tween: true },
         { pose: swap(KICK_UP), dur: 0.14, hold: 0.02, ease: 'in' },
-        { pose: swap(RUN_PASS), dur: 0.14, hold: 0, ease: 'out' },
+        { pose: swap(RUN_PASS), dur: 0.14, hold: 0, ease: 'out', tween: true },
       ],
     },
     alt: {
