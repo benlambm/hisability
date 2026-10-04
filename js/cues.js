@@ -1,5 +1,5 @@
 // Eyes-free guidance for the player (CUES): spoken cues (Web Speech API), short synthesized
-// tones (WebAudio, no audio files), and vibration (navigator.vibrate, or the iOS 18+
+// tones (WebAudio, no audio files), and vibration (navigator.vibrate, or the iOS 18 to 26.4
 // switch-control haptic as a best-effort fallback).
 //
 // handle(event) consumes js/session.js events. Audio (speech + tones) and vibration are
@@ -139,8 +139,11 @@ export function pickVoice(voices, preferred = navigatorLang()) {
   return best;
 }
 
-// iOS / iPadOS 18+ Safari (and other WebKit iOS browsers): a programmatic click on a
-// <label> wrapping <input type="checkbox" switch> plays the system switch haptic.
+// iOS / iPadOS 18 Safari: a programmatic click on a <label> wrapping
+// <input type="checkbox" switch> plays the system switch haptic. Apple closed this in
+// iOS 26.5 (only genuine taps on a switch vibrate now). iOS 26 freezes the user agent's OS
+// token at "18_6", so from 18.6 on the Safari "Version/" token decides; without one (some
+// home-screen and in-app web views) support is not claimed.
 function detectSwitchHaptics() {
   try {
     const nav = globalThis.navigator;
@@ -152,11 +155,16 @@ function detectSwitchHaptics() {
     const iDevice = /iPhone|iPad|iPod/.test(ua);
     const iPadDesktopUA = /Macintosh/.test(ua) && Number(nav.maxTouchPoints) > 1;
     if (!iDevice && !iPadDesktopUA) return false;
-    const os = iDevice && ua.match(/OS (\d+)[_.]\d/); // "CPU iPhone OS 18_6 like Mac OS X"
-    if (os) return Number(os[1]) >= 18;
-    const safari = ua.match(/Version\/(\d+)/);
-    if (safari) return Number(safari[1]) >= 18;
-    return true; // switch support already implies a recent WebKit
+    const os = iDevice ? ua.match(/OS (\d+)_(\d+)/) : null; // "CPU iPhone OS 18_2 like Mac OS X"
+    if (os) {
+      const [major, minor] = [Number(os[1]), Number(os[2])];
+      if (major < 18) return false;
+      if (major === 18 && minor < 6) return true; // a real (unfrozen) iOS 18.0 - 18.5
+    }
+    const v = ua.match(/Version\/(\d+)(?:\.(\d+))?/);
+    if (!v) return false;
+    const [major, minor] = [Number(v[1]), Number(v[2] || 0)];
+    return major >= 18 && (major < 26 || (major === 26 && minor < 5));
   } catch {
     return false;
   }

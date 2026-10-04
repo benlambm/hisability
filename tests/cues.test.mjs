@@ -30,7 +30,10 @@ function restoreGlobals() {
 
 const ANDROID_UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Mobile Safari/537.36';
 const IPHONE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1';
-const IPHONE_STANDALONE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148';
+// iOS 26 reports a frozen "OS 18_6"; home-screen web views may omit the Version token.
+const IPHONE_FROZEN_STANDALONE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148';
+const IPHONE_18_2_STANDALONE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148';
+const IPHONE_26_5_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Mobile/15E148 Safari/604.1';
 const IPHONE_17_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1';
 const IPAD_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15';
 
@@ -120,7 +123,7 @@ function fakeSpeech({ voices = [], clock = null } = {}) {
 }
 
 function fakeAudio({ webkit = false, state = 'suspended' } = {}) {
-  const log = { contexts: [], oscillators: [], sources: [], resumes: 0, suspends: 0 };
+  const log = { contexts: [], oscillators: [], gains: [], sources: [], resumes: 0, suspends: 0 };
   const node = () => ({ connect() {}, disconnect() {} });
   const param = (value) => {
     const p = {
@@ -153,7 +156,9 @@ function fakeAudio({ webkit = false, state = 'suspended' } = {}) {
       return Promise.resolve();
     }
     createGain() {
-      return { ...node(), gain: param(1) };
+      const g = { ...node(), gain: param(1) };
+      log.gains.push(g);
+      return g;
     }
     createOscillator() {
       const o = {
@@ -572,12 +577,19 @@ describe('cues', () => {
     assert.deepEqual(audio.freqs(), [660, 990]);
     cues.handle(seg('transition', 1));
     cues.handle(ev('countdown', { secondsLeft: 3 }));
+    for (const o of audio.oscillators) assert.ok(o.stopAt > o.startAt, 'every oscillator has a stop time');
+    // Every note fades in from silence and back out (no clicks).
+    for (const g of audio.gains.slice(1)) {
+      assert.deepEqual(g.gain.calls[0].slice(0, 2), ['set', 0.0001]);
+      assert.deepEqual(g.gain.calls.map((c) => c[0]), ['set', 'exp', 'exp']);
+      assert.equal(g.gain.calls[2][1], 0.0001);
+    }
+    // Pause cuts pending tones with a short fade before its own double blip.
+    const before = audio.oscillators.length;
     cues.handle(ev('pause'));
+    for (const o of audio.oscillators.slice(0, before)) assert.ok(o.stopAt <= 0.08);
     cues.handle(ev('complete'));
     assert.deepEqual(audio.freqs().slice(2), [392, 880, 330, 330, 523.25, 659.25, 783.99]);
-    for (const o of audio.oscillators) {
-      assert.ok(o.stopAt > o.startAt, 'every oscillator is stopped');
-    }
     // Interrupted context (iOS): try to resume, play nothing late.
     const n = audio.oscillators.length;
     const resumes = audio.resumes;
@@ -848,10 +860,10 @@ describe('cues', () => {
 
   test('a newer pattern or end cancels pending iOS taps', () => {
     fakeSpeech();
-    fakeNavigator({ userAgent: IPHONE_STANDALONE_UA });
+    fakeNavigator({ userAgent: IPHONE_18_2_STANDALONE_UA });
     const dom = fakeSwitchDom();
     const cues = createCues();
-    assert.equal(cues.vibrationSupported, true, 'standalone UA (no Version token) still detected');
+    assert.equal(cues.vibrationSupported, true, 'iOS 18.2 web app (no Version token)');
     cues.handle(ev('complete')); // taps at 0, 310, 620
     cues.handle(ev('end'));
     mock.timers.tick(1000);
@@ -873,6 +885,16 @@ describe('cues', () => {
     assert.equal(check(() => (fakeNavigator({ userAgent: IPAD_UA, maxTouchPoints: 5 }), fakeSwitchDom())), true, 'iPadOS');
     assert.equal(check(() => (fakeNavigator({ userAgent: IPAD_UA, maxTouchPoints: 0 }), fakeSwitchDom())), false, 'macOS Safari');
     assert.equal(check(() => (fakeNavigator({ userAgent: IPHONE_17_UA }), fakeSwitchDom())), false, 'iOS 17 has no switch haptic');
+    assert.equal(check(() => (fakeNavigator({ userAgent: IPHONE_26_5_UA }), fakeSwitchDom())), false, 'closed in iOS 26.5');
+    assert.equal(
+      check(() => (fakeNavigator({ userAgent: IPHONE_FROZEN_STANDALONE_UA }), fakeSwitchDom())),
+      false,
+      'frozen OS token, no Safari version: not claimed',
+    );
+    assert.equal(
+      check(() => (fakeNavigator({ userAgent: IPAD_UA.replace('26.0', '26.5'), maxTouchPoints: 5 }), fakeSwitchDom())),
+      false,
+    );
     assert.equal(check(() => fakeNavigator({ userAgent: IPHONE_UA })), false, 'no DOM');
     assert.equal(
       check(() => {
@@ -890,7 +912,11 @@ describe('cues', () => {
 // ---- integration with the real session --------------------------------------------
 
 describe('cues with js/session.js', () => {
+  beforeEach(() => {
+    mock.timers.enable({ apis: ['setTimeout'] });
+  });
   afterEach(() => {
+    mock.timers.reset();
     restoreGlobals();
   });
 
