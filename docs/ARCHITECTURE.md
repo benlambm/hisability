@@ -172,7 +172,7 @@ export function mulberry32(seed)        // deterministic rng for tests
 ```
 
 Validity: exactly 12, no duplicate ids, exactly 3 per category, no two adjacent moves sharing
-`region`, no two adjacent sharing `pattern`, no two adjacent `impact: 'high'`, every move has a
+`category` or `region`, no two adjacent sharing `pattern`, no two adjacent `impact: 'high'`, every move has a
 lower-impact `alt`, default equipment is `none` or `wall`. Algorithm: draw 3 random moves per
 category, then randomized backtracking to find a valid order; redraw the selection if none exists;
 if the result's key equals `previousKey`, redraw. Never loops forever (bounded attempts, then throw).
@@ -193,12 +193,14 @@ export function createSession({ workout, timeline = buildTimeline(), now = () =>
                                 resumeCountdownMs = TIMING.resumeCountdownSec * 1000 })
 ```
 
+Timeline: 24 segments (prep, 12 work, 11 transitions).
+
 Session methods: `start()`, `pause()`, `resume()`, `skip()`, `end()`, `tick()`, `snapshot()`,
 `setAlternative(moveIndex, on)`, `isAlternative(i)`, `on(handler)` (receives every event,
 returns an unsubscribe function).
 
 States: `idle -> running <-> paused -> resuming -> running ... -> complete`; `end()` from any
-state -> `ended`. Position advances only while `running`. Timeline position is computed from
+non-terminal state -> `ended`. Position advances only while `running`. Timeline position is computed from
 `now()` deltas (accumulated + now - runStartedAt), never by summing ticks, so late callbacks cause
 no drift. `resume()` enters `resuming` for 3 s (position frozen) then `running`.
 
