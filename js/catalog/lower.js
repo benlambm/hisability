@@ -110,19 +110,21 @@ export default [
     cue: 'Step back and lower until both knees bend.',
     mistake: 'Letting the front knee drift inward.',
     caution: 'Shorten the step if your knees complain.',
-    description: 'Side view. The figure steps one foot back and lowers the back knee toward the floor, then steps forward to standing and repeats with the other leg.',
+    description: 'Side view. The figure steps one foot back and lowers until the back knee nearly touches the floor, drives up through the front foot, brings the back foot forward, and repeats with the other leg.',
     demo: {
+      // Alternating legs. The planted front foot is pinned per key (nearAnkle, then farAnkle); the
+      // stepping foot lifts (tween keys hover it above the spot where it lands) so it never skids.
       view: 'side',
-      anchor: { joint: 'nearAnkle', x: 112 },
+      anchor: { joint: 'nearAnkle', x: 116 },
       focus: ['legs'],
-      contacts: ['farToe', 'nearToe'],
+      contacts: ['nearToe', 'nearAnkle'],
       keys: [
-        { pose: { torso: 0, nearArm: [222, 127] }, dur: 0.55, hold: 0.15, ease: 'in' },
-        { pose: { torso: 3, nearArm: [225, 130], nearLeg: [185.4, 233.2], farLeg: [132.4, 180], nearFoot: 106, farFoot: 100, dx: -62.1 }, dur: 0.55, hold: 0, ease: 'out', tween: true },
-        { pose: { torso: 8, nearArm: [230, 135], nearLeg: [189.1, 270], farLeg: [100, 193], nearFoot: 120, farFoot: 100, dx: -73.3 }, dur: 0.55, hold: 0.2, ease: 'in' },
-        { pose: { torso: 3, nearArm: [225, 130], nearLeg: [185.4, 233.2], farLeg: [132.4, 180], nearFoot: 106, farFoot: 100, dx: -62.1 }, dur: 0.5, hold: 0, ease: 'out', tween: true },
-        { pose: { torso: 0, nearArm: [222, 127] }, dur: 1.1, hold: 0.15 },
-        { pose: { torso: 8, nearArm: [230, 135], nearLeg: [100, 193], farLeg: [189.1, 270], farFoot: 120 }, dur: 1.05, hold: 0.2 },
+        { pose: { torso: 6, nearArm: [222, 127], farArm: [219, 124], nearLeg: [100, 190], farLeg: [186, 275.2], nearFoot: 100, farFoot: 140 }, dur: 0.75, hold: 0.2, contacts: ['nearToe', 'nearAnkle', 'farToe'] },
+        { pose: { torso: 3, nearArm: [222, 127], farArm: [219, 124], nearLeg: [175.2, 183.2], farLeg: [147, 212.8], nearFoot: 100, farFoot: 100 }, dur: 0.3, hold: 0, tween: true },
+        { pose: { torso: 3, nearArm: [222, 127], farArm: [219, 124], nearLeg: [147, 212.8], farLeg: [175.2, 183.2], nearFoot: 100, farFoot: 100 }, dur: 0.8, hold: 0.05, anchor: { joint: 'farAnkle', x: 116 }, contacts: ['farToe', 'farAnkle'] },
+        { pose: { torso: 6, nearArm: [222, 127], farArm: [219, 124], nearLeg: [186, 275.2], farLeg: [100, 190], nearFoot: 140, farFoot: 100 }, dur: 0.75, hold: 0.2, anchor: { joint: 'farAnkle', x: 116 }, contacts: ['farToe', 'farAnkle', 'nearToe'] },
+        { pose: { torso: 3, nearArm: [222, 127], farArm: [219, 124], nearLeg: [147, 212.8], farLeg: [175.2, 183.2], nearFoot: 100, farFoot: 100 }, dur: 0.3, hold: 0, tween: true, anchor: { joint: 'farAnkle', x: 116 }, contacts: ['farToe', 'farAnkle'] },
+        { pose: { torso: 3, nearArm: [222, 127], farArm: [219, 124], nearLeg: [175.2, 183.2], farLeg: [147, 212.8], nearFoot: 100, farFoot: 100 }, dur: 0.8, hold: 0.05 },
       ],
     },
     alt: {
